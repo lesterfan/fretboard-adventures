@@ -121,6 +121,8 @@ export function getChordOfKey(keyName: string, chordNum: number): string {
   return chords[chordNum - 1];
 }
 
-export function getRandomKeyName(): string {
-  return _.sample(_.keys(KEY_CHORDS)) as string;
+export function getRandomKeyName(includeMinorKeys: boolean): string {
+  const allKeys = _.keys(KEY_CHORDS);
+  const filteredKeys = includeMinorKeys ? allKeys : allKeys.filter((key) => !key.includes("m"));
+  return _.sample(filteredKeys) as string;
 }
