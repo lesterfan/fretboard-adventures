@@ -21,7 +21,7 @@ const ChordGivenKey: React.FC = () => {
     setShowAnswer(false);
     setLastRoundTimeSeconds(timer.timerElapsedSeconds);
     setKeyName(getRandomKeyName());
-    setChordNum(_.random(1, 7));
+    setChordNum(_.random(2, 7)); // The 1 chord is the tonic, so we don't ask for it.
     timer.resetTimer();
   };
   return (
