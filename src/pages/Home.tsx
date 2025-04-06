@@ -3,8 +3,8 @@ import React from "react";
 const Home: React.FC = () => {
   return (
     <>
-      <h1>Home</h1>
-      <p>Try out some of the links above!</p>
+      <h1>Fretboard Adventures</h1>
+      <p>Try out some of the studies above!</p>
     </>
   );
 };

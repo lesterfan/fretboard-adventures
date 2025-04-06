@@ -3,7 +3,7 @@ import { getGuitarNoteName, getGuitarStringsDisclaimer } from "../lib/Library";
 import _ from "lodash";
 import { useTimer } from "../hooks/useTimer";
 
-const GuitarNoteRecognition: React.FC = () => {
+const NoteRecognition: React.FC = () => {
   const [score, setScore] = useState<number>(0);
   const [stringNum, setStringNum] = useState<number>(_.random(1, 6));
   const [fretNum, setFretNum] = useState<number>(_.random(1, 12));
@@ -51,4 +51,4 @@ const GuitarNoteRecognition: React.FC = () => {
   );
 };
 
-export default GuitarNoteRecognition;
+export default NoteRecognition;

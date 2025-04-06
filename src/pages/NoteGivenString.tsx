@@ -7,7 +7,7 @@ import {
 } from "../lib/Library";
 import { useTimer } from "../hooks/useTimer";
 
-const GuitarNoteGivenString: React.FC = () => {
+const NoteGivenString: React.FC = () => {
   const [score, setScore] = useState<number>(0);
   const [stringNum, setStringNum] = useState<number>(_.random(1, 6));
   const [noteName, setNoteName] = useState<string>(getRandomMuscialNoteName());
@@ -55,4 +55,4 @@ const GuitarNoteGivenString: React.FC = () => {
   );
 };
 
-export default GuitarNoteGivenString;
+export default NoteGivenString;
