@@ -1,5 +1,6 @@
 {
   "name": "lesterfan.github.io",
+  "homepage": "https://lesterfan.github.io/lesterfan.github.io",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,7 +8,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
+    "preview": "vite preview --base=/lesterfan.github.io/",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
