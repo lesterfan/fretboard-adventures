@@ -1,5 +1,11 @@
-export function randomBetween(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+import _ from "lodash";
+
+export function getMusicalNoteNames(): string[] {
+  return ["A", "A#/Bb", "B", "C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab"];
+}
+
+export function getRandomMuscialNoteName(): string {
+  return _.sample(getMusicalNoteNames()) as string;
 }
 
 /**
@@ -16,20 +22,7 @@ export function getGuitarNoteName(
   } else if (fretNum < 0) {
     throw new Error("Fret number cannot be negative");
   }
-  const noteNames = [
-    "A",
-    "A#/Bb",
-    "B",
-    "C",
-    "C#/Db",
-    "D",
-    "D#/Eb",
-    "E",
-    "F",
-    "F#/Gb",
-    "G",
-    "G#/Ab",
-  ];
+  const noteNames = getMusicalNoteNames();
   const tuning = [...rawTuning].reverse();
   if (tuning.length !== 6 || !tuning.every((note) => noteNames.includes(note))) {
     throw new Error(`Invalid tuning; each note must be one of ${noteNames}`);
@@ -37,4 +30,29 @@ export function getGuitarNoteName(
   const stringNote = tuning[stringNum - 1];
   const stringNoteIndex = noteNames.indexOf(stringNote);
   return noteNames[(stringNoteIndex + fretNum) % noteNames.length];
+}
+
+export function findFretGivenStringAndNote(
+  stringNum: number,
+  noteName: string,
+  rawTuning: string[] = ["E", "A", "D", "G", "B", "E"]
+): number {
+  if (stringNum < 1 || stringNum > 6) {
+    throw new Error("Invalid string number");
+  }
+  const noteNames = getMusicalNoteNames();
+  if (!noteNames.includes(noteName)) {
+    throw new Error(`Invalid note name; ${noteName} is not one of ${noteNames}`);
+  }
+  const tuning = [...rawTuning].reverse();
+  if (tuning.length !== 6 || !tuning.every((note) => noteNames.includes(note))) {
+    throw new Error(`Invalid tuning; each note must be one of ${noteNames}`);
+  }
+  let currNoteIndex = noteNames.indexOf(tuning[stringNum - 1]);
+  let fretNum = 0;
+  while (noteNames[currNoteIndex] !== noteName) {
+    currNoteIndex = (currNoteIndex + 1) % noteNames.length;
+    ++fretNum;
+  }
+  return fretNum;
 }

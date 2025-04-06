@@ -1,22 +1,26 @@
 import React, { useState } from "react";
-import { getGuitarNoteName, randomBetween } from "../lib/Library";
+import { getGuitarNoteName } from "../lib/Library";
+import _ from "lodash";
 
-const GuitarFrets: React.FC = () => {
-  const [stringNum, setStringNum] = useState<number>(randomBetween(1, 6));
-  const [fretNum, setFretNum] = useState<number>(randomBetween(1, 12));
+const GuitarNoteRecognition: React.FC = () => {
   const [score, setScore] = useState<number>(0);
+  const [stringNum, setStringNum] = useState<number>(_.random(1, 6));
+  const [fretNum, setFretNum] = useState<number>(_.random(1, 12));
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
   const resetRoundState = () => {
-    setStringNum(randomBetween(1, 6));
-    setFretNum(randomBetween(1, 12));
+    setStringNum(_.random(1, 6));
+    setFretNum(_.random(1, 12));
     setShowAnswer(false);
   };
   return (
     <>
       <h1>Score = {score}</h1>
       <p>
-        What note is on string {stringNum}, fret {fretNum}? Note that the first string is the
-        highest string and the sixth string is the lowest string.
+        (Note that the first string is the highest string and the sixth string is the lowest
+        string.)
+      </p>
+      <p>
+        What note is on string {stringNum}, fret {fretNum}?
       </p>
       <button onClick={() => setShowAnswer(!showAnswer)}>Show Answer</button>
       <button
@@ -40,4 +44,4 @@ const GuitarFrets: React.FC = () => {
   );
 };
 
-export default GuitarFrets;
+export default GuitarNoteRecognition;
