@@ -1,23 +1,30 @@
 import React, { useState } from "react";
-import { getGuitarNoteName } from "../lib/Library";
+import { getGuitarNoteName, getGuitarStringsDisclaimer } from "../lib/Library";
 import _ from "lodash";
+import { useTimer } from "../hooks/useTimer";
 
 const GuitarNoteRecognition: React.FC = () => {
   const [score, setScore] = useState<number>(0);
   const [stringNum, setStringNum] = useState<number>(_.random(1, 6));
   const [fretNum, setFretNum] = useState<number>(_.random(1, 12));
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
+  const timer = useTimer();
+  const [lastRoundTimeSeconds, setLastRoundTimeSeconds] = useState<number | null>(null);
   const resetRoundState = () => {
     setStringNum(_.random(1, 6));
     setFretNum(_.random(1, 12));
     setShowAnswer(false);
+    setLastRoundTimeSeconds(timer.timerElapsedSeconds);
+    timer.resetTimer();
   };
   return (
     <>
       <h1>Score = {score}</h1>
       <p>
-        (Note that the first string is the highest string and the sixth string is the lowest
-        string.)
+        <span hidden={_.isNull(lastRoundTimeSeconds)}>
+          Last round: {lastRoundTimeSeconds} seconds.
+        </span>{" "}
+        ({getGuitarStringsDisclaimer()})
       </p>
       <p>
         What note is on string {stringNum}, fret {fretNum}?

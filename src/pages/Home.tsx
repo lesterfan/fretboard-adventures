@@ -4,7 +4,7 @@ const Home: React.FC = () => {
   return (
     <>
       <h1>Home</h1>
-      <p>Trying out some random things here</p>
+      <p>Try out some of the links above!</p>
     </>
   );
 };

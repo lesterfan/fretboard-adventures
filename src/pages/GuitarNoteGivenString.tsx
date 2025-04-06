@@ -1,23 +1,34 @@
 import React, { useState } from "react";
 import _ from "lodash";
-import { findFretGivenStringAndNote, getRandomMuscialNoteName } from "../lib/Library";
+import {
+  findFretGivenStringAndNote,
+  getGuitarStringsDisclaimer,
+  getRandomMuscialNoteName,
+} from "../lib/Library";
+import { useTimer } from "../hooks/useTimer";
 
-const GuitarNoteRecognition: React.FC = () => {
+const GuitarNoteGivenString: React.FC = () => {
   const [score, setScore] = useState<number>(0);
   const [stringNum, setStringNum] = useState<number>(_.random(1, 6));
   const [noteName, setNoteName] = useState<string>(getRandomMuscialNoteName());
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
+  const timer = useTimer();
+  const [lastRoundTimeSeconds, setLastRoundTimeSeconds] = useState<number | null>(null);
   const resetRoundState = () => {
     setStringNum(_.random(1, 6));
     setNoteName(getRandomMuscialNoteName());
     setShowAnswer(false);
+    setLastRoundTimeSeconds(timer.timerElapsedSeconds);
+    timer.resetTimer();
   };
   return (
     <>
       <h1>Score = {score}</h1>
       <p>
-        (Note that the first string is the highest string and the sixth string is the lowest
-        string.)
+        <span hidden={_.isNull(lastRoundTimeSeconds)}>
+          Last round: {lastRoundTimeSeconds} seconds.
+        </span>{" "}
+        ({getGuitarStringsDisclaimer()})
       </p>
       <p>
         Find the fret number of a {noteName} note on string {stringNum}.
@@ -44,4 +55,4 @@ const GuitarNoteRecognition: React.FC = () => {
   );
 };
 
-export default GuitarNoteRecognition;
+export default GuitarNoteGivenString;
