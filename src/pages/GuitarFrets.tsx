@@ -15,7 +15,8 @@ const GuitarFrets: React.FC = () => {
     <>
       <h1>Score = {score}</h1>
       <p>
-        What note is on string {stringNum}, fret {fretNum}?
+        What note is on string {stringNum}, fret {fretNum}? Note that the first string is the
+        highest string and the sixth string is the lowest string.
       </p>
       <button onClick={() => setShowAnswer(!showAnswer)}>Show Answer</button>
       <button
