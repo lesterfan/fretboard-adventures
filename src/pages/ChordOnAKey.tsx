@@ -23,7 +23,7 @@ const styles = {
   },
 };
 
-const ChordGivenKey: React.FC = () => {
+const ChordOnAKey: React.FC = () => {
   const [score, setScore] = useState<number>(0);
   const [includeMinorKeys, setIncludeMinorKeys] = useState<boolean>(false);
   const [keyName, setKeyName] = useState<string>(getRandomKeyName(includeMinorKeys));
@@ -112,4 +112,4 @@ const ChordGivenKey: React.FC = () => {
   );
 };
 
-export default ChordGivenKey;
+export default ChordOnAKey;

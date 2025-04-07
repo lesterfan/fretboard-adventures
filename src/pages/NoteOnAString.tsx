@@ -17,7 +17,7 @@ const styles = {
   },
 };
 
-const NoteGivenString: React.FC = () => {
+const NoteOnAString: React.FC = () => {
   const [score, setScore] = useState<number>(0);
   const [stringNum, setStringNum] = useState<number>(_.random(1, 6));
   const [noteName, setNoteName] = useState<string>(getRandomMuscialNoteName());
@@ -84,4 +84,4 @@ const NoteGivenString: React.FC = () => {
   );
 };
 
-export default NoteGivenString;
+export default NoteOnAString;

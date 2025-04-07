@@ -13,7 +13,7 @@ const styles = {
   },
 };
 
-const NoteRecognition: React.FC = () => {
+const FretboardRecognition: React.FC = () => {
   const [score, setScore] = useState<number>(0);
   const [stringNum, setStringNum] = useState<number>(_.random(1, 6));
   const [fretNum, setFretNum] = useState<number>(_.random(1, 12));
@@ -79,4 +79,4 @@ const NoteRecognition: React.FC = () => {
   );
 };
 
-export default NoteRecognition;
+export default FretboardRecognition;

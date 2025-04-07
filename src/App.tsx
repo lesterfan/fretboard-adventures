@@ -2,9 +2,9 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { Box, CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import Home from "./pages/Home";
-import NoteRecognition from "./pages/NoteRecognition";
-import NoteGivenString from "./pages/NoteGivenString";
-import ChordGivenKey from "./pages/ChordGivenKey";
+import FretboardRecognition from "./pages/FretboardRecognition";
+import NoteOnAString from "./pages/NoteOnAString";
+import ChordOnAKey from "./pages/ChordOnAKey";
 import { Sidebar } from "./components/Sidebar";
 
 const theme = createTheme({
@@ -46,9 +46,9 @@ const theme = createTheme({
 const App: React.FC = () => {
   const routes = [
     { path: "/", name: "Home" },
-    { path: "/note_recognition", name: "Note Recognition" },
-    { path: "/note_given_string", name: "Note Given String" },
-    { path: "/chord_given_key", name: "Chord Given Key" },
+    { path: "/fretboard_recognition", name: "Fretboard Recognition" },
+    { path: "/note_on_a_string", name: "Note on a String" },
+    { path: "/chord_in_a_key", name: "Chord in a Key" },
   ];
 
   return (
@@ -68,9 +68,9 @@ const App: React.FC = () => {
         >
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/note_recognition" element={<NoteRecognition />} />
-            <Route path="/note_given_string" element={<NoteGivenString />} />
-            <Route path="/chord_given_key" element={<ChordGivenKey />} />
+            <Route path="/fretboard_recognition" element={<FretboardRecognition />} />
+            <Route path="/note_on_a_string" element={<NoteOnAString />} />
+            <Route path="/chord_in_a_key" element={<ChordOnAKey />} />
           </Routes>
         </Box>
       </Box>
