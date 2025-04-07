@@ -33,10 +33,12 @@ const FretboardRecognition: React.FC = () => {
       <Typography variant="h3" gutterBottom>
         Score = {score}
       </Typography>
+
+      <Typography hidden={_.isNull(lastRoundTimeSeconds)} variant="body1" gutterBottom>
+        Last round: {lastRoundTimeSeconds} second(s)
+      </Typography>
+
       <Typography variant="body1" gutterBottom>
-        <span hidden={_.isNull(lastRoundTimeSeconds)}>
-          Last round: {lastRoundTimeSeconds} second(s).
-        </span>{" "}
         ({getGuitarStringsDisclaimer()})
       </Typography>
 

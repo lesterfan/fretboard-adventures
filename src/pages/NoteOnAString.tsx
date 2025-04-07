@@ -38,16 +38,17 @@ const NoteOnAString: React.FC = () => {
         Score = {score}
       </Typography>
 
+      <Typography hidden={_.isNull(lastRoundTimeSeconds)} variant="body1" gutterBottom>
+        Last round: {lastRoundTimeSeconds} second(s)
+      </Typography>
+
       <Typography variant="body1" gutterBottom>
-        <span hidden={_.isNull(lastRoundTimeSeconds)}>
-          Last round: {lastRoundTimeSeconds} second(s).
-        </span>{" "}
-        ({getGuitarStringsDisclaimer()})
+        {getGuitarStringsDisclaimer()}
       </Typography>
 
       <Typography variant="body1" gutterBottom>
         <b>
-          Find the lowest fret number of a {noteName} note on string {stringNum}.
+          Find the lowest {noteName} note on string {stringNum}.
         </b>
       </Typography>
 

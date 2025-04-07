@@ -21,11 +21,16 @@ const styles = {
   helpfulNotesList: {
     marginTop: "0",
   },
+  checkboxContainer: {
+    mb: 2,
+    "& .MuiFormControlLabel-root": { maxHeight: "1.5em" },
+  },
 };
 
 const ChordOnAKey: React.FC = () => {
   const [score, setScore] = useState<number>(0);
   const [includeMinorKeys, setIncludeMinorKeys] = useState<boolean>(false);
+  const [showTips, setShowTips] = useState<boolean>(false);
   const [keyName, setKeyName] = useState<string>(getRandomKeyName(includeMinorKeys));
   const [chordNum, setChordNum] = useState<number>(_.random(1, 7));
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
@@ -43,35 +48,49 @@ const ChordOnAKey: React.FC = () => {
     <>
       <Typography variant="h3">Score = {score}</Typography>
 
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={includeMinorKeys}
-            onChange={() => setIncludeMinorKeys(!includeMinorKeys)}
-            size="small"
-          />
-        }
-        label="Include minor keys"
-      />
-
-      <Typography variant="body1" gutterBottom>
-        <span hidden={_.isNull(lastRoundTimeSeconds)}>
-          Last round: {lastRoundTimeSeconds} second(s).
-        </span>{" "}
-        Helpful notes:
+      <Typography hidden={_.isNull(lastRoundTimeSeconds)} variant="body1" gutterBottom>
+        Last round: {lastRoundTimeSeconds} second(s)
       </Typography>
-      <Box component="ol" sx={styles.helpfulNotesList}>
-        <li>Major key note pattern: {getMajorKeyNotePattern().join(", ")}</li>
-        <li>Major key chord pattern: {getMajorKeyChordPattern().join(", ")}</li>
-        {includeMinorKeys ? (
-          <>
-            <li>The 6th note of the major scale is the relative minor.</li>
-            <li>The 3rd note of the minor scale is the relative major.</li>
-            <li>Minor key note pattern: {getMinorKeyNotePattern().join(", ")}</li>
-            <li>Minor key chord pattern: {getMinorKeyChordPattern().join(", ")}</li>
-          </>
-        ) : null}
-      </Box>
+
+      <Stack sx={styles.checkboxContainer}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={includeMinorKeys}
+              onChange={() => setIncludeMinorKeys(!includeMinorKeys)}
+              size="small"
+            />
+          }
+          label="Include minor keys"
+        />
+        <FormControlLabel
+          control={
+            <Checkbox checked={showTips} onChange={() => setShowTips(!showTips)} size="small" />
+          }
+          label="Show tips"
+        />
+      </Stack>
+
+      {showTips ? (
+        <>
+          <Typography variant="body1" gutterBottom>
+            Tips:
+          </Typography>
+
+          <Box component="ol" sx={styles.helpfulNotesList}>
+            <li>Major key note pattern: {getMajorKeyNotePattern().join(", ")}</li>
+            <li>Major key chord pattern: {getMajorKeyChordPattern().join(", ")}</li>
+            {includeMinorKeys ? (
+              <>
+                <li>The 6th note of the major scale is the relative minor.</li>
+                <li>The 3rd note of the minor scale is the relative major.</li>
+                <li>Minor key note pattern: {getMinorKeyNotePattern().join(", ")}</li>
+                <li>Minor key chord pattern: {getMinorKeyChordPattern().join(", ")}</li>
+              </>
+            ) : null}
+          </Box>
+        </>
+      ) : null}
 
       <Typography variant="body1" gutterBottom>
         <b>
