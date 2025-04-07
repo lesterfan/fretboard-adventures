@@ -6,6 +6,7 @@ import FretboardRecognition from "./pages/FretboardRecognition";
 import NoteOnAString from "./pages/NoteOnAString";
 import ChordOnAKey from "./pages/ChordOnAKey";
 import { Sidebar } from "./components/Sidebar";
+import NotFound from "./pages/NotFound";
 
 const theme = createTheme({
   palette: {
@@ -60,8 +61,8 @@ const App: React.FC = () => {
           component="main"
           sx={{
             flexGrow: 1,
-            p: 2,
-            paddingTop: 0,
+            paddingLeft: "1rem",
+            paddingTop: "4rem",
             width: "100%",
             minHeight: "100vh",
           }}
@@ -71,6 +72,7 @@ const App: React.FC = () => {
             <Route path="/fretboard_recognition" element={<FretboardRecognition />} />
             <Route path="/note_on_a_string" element={<NoteOnAString />} />
             <Route path="/chord_in_a_key" element={<ChordOnAKey />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Box>
       </Box>

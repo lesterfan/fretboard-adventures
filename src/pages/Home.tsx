@@ -8,8 +8,8 @@ const Home: React.FC = () => {
         Fretboard Adventures
       </Typography>
       <Typography variant="body1" gutterBottom>
-        Some interactive test flash-card style games to help study guitar. Try out some of the games
-        in the menu above!
+        Some interactive flash-card style games for studying guitar. Try out some of the games by
+        clicking the guitar icon on the top left!
       </Typography>
     </>
   );

@@ -11,8 +11,8 @@ import {
   AppBar,
   Typography,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate, useLocation } from "react-router-dom";
+import guitarIcon from "../../public/guitar.svg";
 
 interface Route {
   path: string;
@@ -31,6 +31,9 @@ const styles = {
     color: "black",
     boxShadow: "none",
     borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
+  },
+  toolbar: {
+    justifyContent: "flex-start",
   },
   menuButton: {
     color: "black",
@@ -76,19 +79,22 @@ export const Sidebar: React.FC<SidebarProps> = ({ routes }) => {
 
   return (
     <>
-      <AppBar position="relative" sx={styles.appBar}>
-        <Toolbar
-          sx={{
-            justifyContent: "flex-start",
-          }}
-        >
+      <AppBar position="absolute" sx={styles.appBar}>
+        <Toolbar sx={styles.toolbar}>
           <IconButton
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
             sx={styles.menuButton}
           >
-            <MenuIcon />
+            <Box
+              component="img"
+              src={guitarIcon}
+              sx={{
+                width: "2rem",
+                height: "2rem",
+              }}
+            />
           </IconButton>
           <Typography variant="h6" noWrap component="div" sx={styles.title}>
             {getCurrentPageTitle()}
