@@ -46,7 +46,9 @@ const NoteGivenString: React.FC = () => {
       </Typography>
 
       <Typography variant="body1" gutterBottom>
-        Find the fret number of a {noteName} note on string {stringNum}.
+        <b>
+          Find the lowest fret number of a {noteName} note on string {stringNum}.
+        </b>
       </Typography>
 
       <Stack spacing={1} direction="row" sx={styles.buttonContainer}>

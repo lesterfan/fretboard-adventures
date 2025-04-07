@@ -41,7 +41,9 @@ const NoteRecognition: React.FC = () => {
       </Typography>
 
       <Typography variant="body1" gutterBottom>
-        What note is on string {stringNum}, fret {fretNum}?
+        <b>
+          What note is on string {stringNum}, fret {fretNum}?
+        </b>
       </Typography>
 
       <Stack spacing={1} direction="row" sx={styles.buttonContainer}>

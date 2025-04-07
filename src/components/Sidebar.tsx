@@ -38,6 +38,9 @@ const styles = {
       fontSize: "1.2rem",
     },
   },
+  title: {
+    marginLeft: "0.35em",
+  },
 };
 
 export const Sidebar: React.FC<SidebarProps> = ({ routes }) => {
@@ -87,7 +90,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ routes }) => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
+          <Typography variant="h6" noWrap component="div" sx={styles.title}>
             {getCurrentPageTitle()}
           </Typography>
         </Toolbar>

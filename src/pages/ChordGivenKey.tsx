@@ -12,9 +12,6 @@ import { useTimer } from "../hooks/useTimer";
 import { Typography, Button, Stack, Checkbox, FormControlLabel, Box } from "@mui/material";
 
 const styles = {
-  score: {
-    marginTop: "0.35em",
-  },
   buttonContainer: {
     marginTop: "1em",
   },
@@ -44,9 +41,7 @@ const ChordGivenKey: React.FC = () => {
 
   return (
     <>
-      <Typography variant="h3" sx={styles.score}>
-        Score = {score}
-      </Typography>
+      <Typography variant="h3">Score = {score}</Typography>
 
       <FormControlLabel
         control={
@@ -79,7 +74,9 @@ const ChordGivenKey: React.FC = () => {
       </Box>
 
       <Typography variant="body1" gutterBottom>
-        What is the {chordNum} chord of the {keyName} key?
+        <b>
+          What is the {chordNum} chord of the {keyName} key?
+        </b>
       </Typography>
 
       <Stack spacing={1} direction="row" sx={styles.buttonContainer}>

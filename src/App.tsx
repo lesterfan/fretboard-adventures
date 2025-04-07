@@ -32,6 +32,14 @@ const theme = createTheme({
         },
       },
     },
+    MuiTypography: {
+      styleOverrides: {
+        h3: {
+          marginTop: "0.35em",
+          marginBottom: "0.35em",
+        },
+      },
+    },
   },
 });
 
