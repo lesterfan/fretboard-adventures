@@ -6,9 +6,25 @@ import {
   getMinorKeyChordPattern,
   getMinorKeyNotePattern,
   getRandomKeyName,
-} from "../lib/Library";
+} from "../library/Library";
 import _ from "lodash";
 import { useTimer } from "../hooks/useTimer";
+import { Typography, Button, Stack, Checkbox, FormControlLabel, Box } from "@mui/material";
+
+const styles = {
+  score: {
+    marginTop: "0.35em",
+  },
+  buttonContainer: {
+    marginTop: "1em",
+  },
+  answerText: {
+    marginTop: "1em",
+  },
+  helpfulNotesList: {
+    marginTop: "0",
+  },
+};
 
 const ChordGivenKey: React.FC = () => {
   const [score, setScore] = useState<number>(0);
@@ -25,54 +41,76 @@ const ChordGivenKey: React.FC = () => {
     setChordNum(_.random(2, 7)); // The 1 chord is the tonic, so we don't ask for it.
     timer.resetTimer();
   };
+
   return (
     <>
-      <h1>Score = {score}</h1>
-      <input
-        type="checkbox"
-        id="includeMinorKeysCheckbox"
-        onClick={() => setIncludeMinorKeys(!includeMinorKeys)}
+      <Typography variant="h3" sx={styles.score}>
+        Score = {score}
+      </Typography>
+
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={includeMinorKeys}
+            onChange={() => setIncludeMinorKeys(!includeMinorKeys)}
+            size="small"
+          />
+        }
+        label="Include minor keys"
       />
-      <label htmlFor="includeMinorKeysCheckbox">Include minor keys</label>
-      <p>
+
+      <Typography variant="body1" gutterBottom>
         <span hidden={_.isNull(lastRoundTimeSeconds)}>
-          Last round: {lastRoundTimeSeconds} seconds.
+          Last round: {lastRoundTimeSeconds} second(s).
         </span>{" "}
         Helpful notes:
-        <ol>
-          <li>Major key note pattern: {getMajorKeyNotePattern().join(", ")}</li>
-          <li>Major key chord pattern: {getMajorKeyChordPattern().join(", ")}</li>
-          {includeMinorKeys ? (
-            <>
-              <li>The 6th note of the major scale is the relative minor.</li>
-              <li>The 3rd note of the minor scale is the relative major.</li>
-              <li>Minor key note pattern: {getMinorKeyNotePattern().join(", ")}</li>
-              <li>Minor key chord pattern: {getMinorKeyChordPattern().join(", ")}</li>
-            </>
-          ) : null}
-        </ol>
-      </p>
-      <p>
+      </Typography>
+      <Box component="ol" sx={styles.helpfulNotesList}>
+        <li>Major key note pattern: {getMajorKeyNotePattern().join(", ")}</li>
+        <li>Major key chord pattern: {getMajorKeyChordPattern().join(", ")}</li>
+        {includeMinorKeys ? (
+          <>
+            <li>The 6th note of the major scale is the relative minor.</li>
+            <li>The 3rd note of the minor scale is the relative major.</li>
+            <li>Minor key note pattern: {getMinorKeyNotePattern().join(", ")}</li>
+            <li>Minor key chord pattern: {getMinorKeyChordPattern().join(", ")}</li>
+          </>
+        ) : null}
+      </Box>
+
+      <Typography variant="body1" gutterBottom>
         What is the {chordNum} chord of the {keyName} key?
-      </p>
-      <button onClick={() => setShowAnswer(!showAnswer)}>Show Answer</button>
-      <button
-        onClick={() => {
-          setScore(score + 1);
-          resetRoundState();
-        }}
-      >
-        I got it right
-      </button>
-      <button
-        onClick={() => {
-          setScore(score - 1);
-          resetRoundState();
-        }}
-      >
-        I got it wrong
-      </button>
-      <p hidden={!showAnswer}>Answer: {getChordOfKey(keyName, chordNum)}</p>
+      </Typography>
+
+      <Stack spacing={1} direction="row" sx={styles.buttonContainer}>
+        <Button variant="outlined" size="small" onClick={() => setShowAnswer(!showAnswer)}>
+          Show Answer
+        </Button>
+        <Button
+          variant="outlined"
+          size="small"
+          onClick={() => {
+            setScore(score + 1);
+            resetRoundState();
+          }}
+        >
+          I got it right
+        </Button>
+        <Button
+          variant="outlined"
+          size="small"
+          onClick={() => {
+            setScore(score - 1);
+            resetRoundState();
+          }}
+        >
+          I got it wrong
+        </Button>
+      </Stack>
+
+      <Typography variant="body1" sx={styles.answerText} hidden={!showAnswer}>
+        <b>Answer:</b> {getChordOfKey(keyName, chordNum)}
+      </Typography>
     </>
   );
 };

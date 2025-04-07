@@ -1,7 +1,17 @@
 import React, { useState } from "react";
-import { getGuitarNoteName, getGuitarStringsDisclaimer } from "../lib/Library";
+import { getGuitarNoteName, getGuitarStringsDisclaimer } from "../library/Library";
 import _ from "lodash";
 import { useTimer } from "../hooks/useTimer";
+import { Typography, Button, Stack } from "@mui/material";
+
+const styles = {
+  buttonContainer: {
+    marginTop: "1em",
+  },
+  answerText: {
+    marginTop: "1em",
+  },
+};
 
 const NoteRecognition: React.FC = () => {
   const [score, setScore] = useState<number>(0);
@@ -17,36 +27,52 @@ const NoteRecognition: React.FC = () => {
     setLastRoundTimeSeconds(timer.timerElapsedSeconds);
     timer.resetTimer();
   };
+
   return (
     <>
-      <h1>Score = {score}</h1>
-      <p>
+      <Typography variant="h3" gutterBottom>
+        Score = {score}
+      </Typography>
+      <Typography variant="body1" gutterBottom>
         <span hidden={_.isNull(lastRoundTimeSeconds)}>
-          Last round: {lastRoundTimeSeconds} seconds.
+          Last round: {lastRoundTimeSeconds} second(s).
         </span>{" "}
         ({getGuitarStringsDisclaimer()})
-      </p>
-      <p>
+      </Typography>
+
+      <Typography variant="body1" gutterBottom>
         What note is on string {stringNum}, fret {fretNum}?
-      </p>
-      <button onClick={() => setShowAnswer(!showAnswer)}>Show Answer</button>
-      <button
-        onClick={() => {
-          setScore(score + 1);
-          resetRoundState();
-        }}
-      >
-        I got it right
-      </button>
-      <button
-        onClick={() => {
-          setScore(score - 1);
-          resetRoundState();
-        }}
-      >
-        I got it wrong
-      </button>
-      <p hidden={!showAnswer}>Answer: {getGuitarNoteName(stringNum, fretNum)}</p>
+      </Typography>
+
+      <Stack spacing={1} direction="row" sx={styles.buttonContainer}>
+        <Button variant="outlined" size="small" onClick={() => setShowAnswer(!showAnswer)}>
+          Show Answer
+        </Button>
+        <Button
+          variant="outlined"
+          size="small"
+          onClick={() => {
+            setScore(score + 1);
+            resetRoundState();
+          }}
+        >
+          I got it right
+        </Button>
+        <Button
+          variant="outlined"
+          size="small"
+          onClick={() => {
+            setScore(score - 1);
+            resetRoundState();
+          }}
+        >
+          I got it wrong
+        </Button>
+      </Stack>
+
+      <Typography variant="body1" sx={styles.answerText} hidden={!showAnswer}>
+        <b>Answer:</b> {getGuitarNoteName(stringNum, fretNum)}
+      </Typography>
     </>
   );
 };
