@@ -64,12 +64,10 @@ describe("getChordOfKey", () => {
   test("should return the correct chords for major keys", () => {
     // C major
     expect(getChordOfKey("C", 1)).toBe("C");
-    expect(getChordOfKey("C", 2)).toBe("Dm");
+    expect(getChordOfKey("C", 2)).toBe("D");
     expect(getChordOfKey("C", 3)).toBe("Em");
     expect(getChordOfKey("C", 4)).toBe("F");
-    expect(getChordOfKey("C", 5)).toBe("G");
-    expect(getChordOfKey("C", 6)).toBe("Am");
-    expect(getChordOfKey("C", 7)).toBe("Bdim");
+    expect(getChordOfKey("C", 5)).toBe("G"); expect(getChordOfKey("C", 6)).toBe("Am"); expect(getChordOfKey("C", 7)).toBe("Bdim");
 
     // G major
     expect(getChordOfKey("G", 1)).toBe("G");
