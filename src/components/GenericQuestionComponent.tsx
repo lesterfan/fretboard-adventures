@@ -3,6 +3,7 @@ import _ from "lodash";
 import { useTimer } from "../hooks/useTimer";
 import { Typography } from "@mui/material";
 import AnswerButtonList from "./AnswerButtonList";
+import { useScore } from "../context/ScoreContext";
 
 interface Props {
   resetRoundState: () => void;
@@ -15,7 +16,7 @@ const GenericQuestionComponent: React.FC<Props> = ({
   QuestionComponent,
   AnswerComponent,
 }) => {
-  const [score, setScore] = useState<number>(0);
+  const { score, setScore } = useScore();
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
   const timer = useTimer();
   const [lastRoundTimeSeconds, setLastRoundTimeSeconds] = useState<number | null>(null);
