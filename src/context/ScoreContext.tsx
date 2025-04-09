@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext } from "react";
+import { useCookie } from "../hooks/useCookie";
 
 interface ScoreContextType {
   score: number;
@@ -8,8 +9,20 @@ interface ScoreContextType {
 const ScoreContext = createContext<ScoreContextType | undefined>(undefined);
 
 export const ScoreProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [score, setScore] = useState(0);
-  return <ScoreContext.Provider value={{ score, setScore }}>{children}</ScoreContext.Provider>;
+  const [cookieScore, setCookieScore] = useCookie("fretboard-adventures-score", "0");
+  const setScore = (newScore: number) => {
+    setCookieScore(newScore.toString());
+  };
+  return (
+    <ScoreContext.Provider
+      value={{
+        score: parseInt(cookieScore, 10),
+        setScore,
+      }}
+    >
+      {children}
+    </ScoreContext.Provider>
+  );
 };
 
 export const useScore = () => {
