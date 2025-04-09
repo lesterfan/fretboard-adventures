@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import _ from "lodash";
-import { useTimer } from "../hooks/useTimer";
 import { Typography } from "@mui/material";
 import AnswerButtonList from "./AnswerButtonList";
 import { useScore } from "../context/ScoreContext";
@@ -18,23 +17,16 @@ const GenericQuestionComponent: React.FC<Props> = ({
 }) => {
   const { score, setScore } = useScore();
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
-  const timer = useTimer();
-  const [lastRoundTimeSeconds, setLastRoundTimeSeconds] = useState<number | null>(null);
 
   const doResetRoundState = () => {
     resetRoundState();
     setShowAnswer(false);
-    setLastRoundTimeSeconds(timer.timerElapsedSeconds);
-    timer.resetTimer();
   };
 
   return (
     <>
       <Typography variant="h3" gutterBottom>
         Score = {score}
-      </Typography>
-      <Typography hidden={_.isNull(lastRoundTimeSeconds)} variant="body1" gutterBottom>
-        Last round: {lastRoundTimeSeconds} second(s)
       </Typography>
       <QuestionComponent />
       <AnswerButtonList

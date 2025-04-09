@@ -1,7 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { Box, CssBaseline, ThemeProvider, createTheme } from "@mui/material";
-import Home from "./pages/Home";
 import FretboardRecognition from "./pages/FretboardRecognition";
 import NoteOnAString from "./pages/NoteOnAString";
 import KeyOfAChord from "./pages/KeyOfAChord";
@@ -49,8 +48,7 @@ const theme = createTheme({
 
 const App: React.FC = () => {
   const routes = [
-    { path: "/", name: "Home" },
-    { path: "/all_questions_combined", name: "All Questions Combined" },
+    { path: "/", name: "Fretboard Adventures" },
     { path: "/fretboard_recognition", name: "Fretboard Recognition" },
     { path: "/note_on_a_string", name: "Note on a String" },
     { path: "/key_of_a_chord", name: "Key of a Chord" },
@@ -74,8 +72,7 @@ const App: React.FC = () => {
             }}
           >
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/all_questions_combined" element={<AllQuestionsCombined />} />
+              <Route path="/" element={<AllQuestionsCombined />} />
               <Route path="/fretboard_recognition" element={<FretboardRecognition />} />
               <Route path="/note_on_a_string" element={<NoteOnAString />} />
               <Route path="/key_of_a_chord" element={<KeyOfAChord />} />
