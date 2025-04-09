@@ -9,6 +9,7 @@ import { Sidebar } from "./components/Sidebar";
 import NotFound from "./pages/NotFound";
 import IsChordInKey from "./pages/IsChordInKey";
 import { ScoreProvider } from "./context/ScoreContext";
+import AllQuestionsCombined from "./pages/AllQuestionsCombined";
 
 const theme = createTheme({
   palette: {
@@ -49,6 +50,7 @@ const theme = createTheme({
 const App: React.FC = () => {
   const routes = [
     { path: "/", name: "Home" },
+    { path: "/all_questions_combined", name: "All Questions Combined" },
     { path: "/fretboard_recognition", name: "Fretboard Recognition" },
     { path: "/note_on_a_string", name: "Note on a String" },
     { path: "/key_of_a_chord", name: "Key of a Chord" },
@@ -73,6 +75,7 @@ const App: React.FC = () => {
           >
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/all_questions_combined" element={<AllQuestionsCombined />} />
               <Route path="/fretboard_recognition" element={<FretboardRecognition />} />
               <Route path="/note_on_a_string" element={<NoteOnAString />} />
               <Route path="/key_of_a_chord" element={<KeyOfAChord />} />

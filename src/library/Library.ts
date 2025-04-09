@@ -1,7 +1,7 @@
 import _ from "lodash";
 
 export function getGuitarStringsDisclaimer(): string {
-  return "Note that string 1 the high E and string 6 is the low E";
+  return "Note that string 1 is the high E and string 6 is the low E";
 }
 
 export function getMusicalNoteNames(): string[] {
