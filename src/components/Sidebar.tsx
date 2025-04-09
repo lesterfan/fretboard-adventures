@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
-import guitarIcon from "../../public/guitar.svg";
+import MenuIcon from "@mui/icons-material/Menu";
 
 interface Route {
   path: string;
@@ -87,14 +87,7 @@ export const Sidebar: React.FC<Props> = ({ routes }) => {
             onClick={handleDrawerToggle}
             sx={styles.menuButton}
           >
-            <Box
-              component="img"
-              src={guitarIcon}
-              sx={{
-                width: "2rem",
-                height: "2rem",
-              }}
-            />
+            <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div" sx={styles.title}>
             {getCurrentPageTitle()}
