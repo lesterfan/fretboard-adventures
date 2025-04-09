@@ -4,9 +4,10 @@ import { Box, CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import Home from "./pages/Home";
 import FretboardRecognition from "./pages/FretboardRecognition";
 import NoteOnAString from "./pages/NoteOnAString";
-import ChordOnAKey from "./pages/ChordOnAKey";
+import KeyOfAChord from "./pages/KeyOfAChord";
 import { Sidebar } from "./components/Sidebar";
 import NotFound from "./pages/NotFound";
+import IsChordInKey from "./pages/IsChordInKey";
 
 const theme = createTheme({
   palette: {
@@ -49,7 +50,8 @@ const App: React.FC = () => {
     { path: "/", name: "Home" },
     { path: "/fretboard_recognition", name: "Fretboard Recognition" },
     { path: "/note_on_a_string", name: "Note on a String" },
-    { path: "/chord_in_a_key", name: "Chord in a Key" },
+    { path: "/key_of_a_chord", name: "Key of a Chord" },
+    { path: "/is_chord_in_key", name: "Is Chord in Key" },
   ];
 
   return (
@@ -71,7 +73,8 @@ const App: React.FC = () => {
             <Route path="/" element={<Home />} />
             <Route path="/fretboard_recognition" element={<FretboardRecognition />} />
             <Route path="/note_on_a_string" element={<NoteOnAString />} />
-            <Route path="/chord_in_a_key" element={<ChordOnAKey />} />
+            <Route path="/key_of_a_chord" element={<KeyOfAChord />} />
+            <Route path="/is_chord_in_key" element={<IsChordInKey />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Box>

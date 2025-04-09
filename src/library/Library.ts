@@ -109,15 +109,19 @@ const KEY_CHORDS: { [key: string]: string[] } = {
   Ebm: ["Ebm", "Fdim", "Gb", "Abm", "Bb", "Cb", "Db"],
 };
 
-export function getChordOfKey(keyName: string, chordNum: number): string {
-  if (chordNum < 1 || chordNum > 7) {
-    throw new Error("Invalid chord number");
-  }
+export function getChordsOfKey(keyName: string): string[] {
   const validKeyNames = _.keys(KEY_CHORDS);
   if (!_.includes(validKeyNames, keyName)) {
     throw new Error(`Invalid key name; ${keyName} is not one of ${validKeyNames}`);
   }
-  const chords = KEY_CHORDS[keyName];
+  return KEY_CHORDS[keyName];
+}
+
+export function getChordOfKey(keyName: string, chordNum: number): string {
+  const chords = getChordsOfKey(keyName);
+  if (chordNum < 1 || chordNum > 7) {
+    throw new Error("Invalid chord number");
+  }
   return chords[chordNum - 1];
 }
 
@@ -125,4 +129,16 @@ export function getRandomKeyName(includeMinorKeys: boolean): string {
   const allKeys = _.keys(KEY_CHORDS);
   const filteredKeys = includeMinorKeys ? allKeys : allKeys.filter((key) => !key.includes("m"));
   return _.sample(filteredKeys) as string;
+}
+
+export function getRandomChord(): string {
+  return _.sample(_.flatMap(_.values(KEY_CHORDS))) as string;
+}
+
+export function getIndexOfChordInKey(keyName: string, chord: string): number {
+  const chords = getChordsOfKey(keyName);
+  if (!_.includes(chords, chord)) {
+    throw new Error(`Chord is not in the key of ${keyName}; ${chord} is not one of ${chords}`);
+  }
+  return _.indexOf(chords, chord) + 1;
 }

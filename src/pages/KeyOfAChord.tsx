@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { getGuitarNoteName, getGuitarStringsDisclaimer } from "../library/Library";
+import { getChordOfKey, getRandomKeyName } from "../library/Library";
 import _ from "lodash";
 import { useTimer } from "../hooks/useTimer";
 import { Typography } from "@mui/material";
+import MusicalKeyTips from "../components/MusicalKeyTips";
 import AnswerButtonList from "../components/AnswerButtonList";
 
 const styles = {
@@ -11,33 +12,36 @@ const styles = {
   },
 };
 
-const FretboardRecognition: React.FC = () => {
+const KeyOfAChord: React.FC = () => {
   const [score, setScore] = useState<number>(0);
-  const [stringNum, setStringNum] = useState<number>(() => _.random(1, 6));
-  const [fretNum, setFretNum] = useState<number>(() => _.random(1, 12));
+  const [includeMinorKeys, setIncludeMinorKeys] = useState<boolean>(false);
+  const [showTips, setShowTips] = useState<boolean>(false);
+  const [keyName, setKeyName] = useState<string>(() => getRandomKeyName(includeMinorKeys));
+  const [chordNum, setChordNum] = useState<number>(_.random(1, 7));
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
   const timer = useTimer();
   const [lastRoundTimeSeconds, setLastRoundTimeSeconds] = useState<number | null>(null);
   const resetRoundState = () => {
-    setStringNum(_.random(1, 6));
-    setFretNum(_.random(1, 12));
     setShowAnswer(false);
     setLastRoundTimeSeconds(timer.timerElapsedSeconds);
+    setKeyName(getRandomKeyName(includeMinorKeys));
+    setChordNum(_.random(2, 7)); // The 1 chord is the tonic, so we don't ask for it.
     timer.resetTimer();
   };
-  const question = `What note is on string ${stringNum}, fret ${fretNum}?`;
-  const answer = getGuitarNoteName(stringNum, fretNum);
+  const question = `What is the ${chordNum} chord of the ${keyName} key?`;
+  const answer = getChordOfKey(keyName, chordNum);
   return (
     <>
-      <Typography variant="h3" gutterBottom>
-        Score = {score}
-      </Typography>
+      <Typography variant="h3">Score = {score}</Typography>
       <Typography hidden={_.isNull(lastRoundTimeSeconds)} variant="body1" gutterBottom>
         Last round: {lastRoundTimeSeconds} second(s)
       </Typography>
-      <Typography variant="body1" gutterBottom>
-        ({getGuitarStringsDisclaimer()})
-      </Typography>
+      <MusicalKeyTips
+        showTips={showTips}
+        setShowTips={setShowTips}
+        includeMinorKeys={includeMinorKeys}
+        setIncludeMinorKeys={setIncludeMinorKeys}
+      />
       <Typography variant="body1" gutterBottom>
         <b>{question}</b>
       </Typography>
@@ -59,4 +63,4 @@ const FretboardRecognition: React.FC = () => {
   );
 };
 
-export default FretboardRecognition;
+export default KeyOfAChord;

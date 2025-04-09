@@ -19,7 +19,7 @@ interface Route {
   name: string;
 }
 
-interface SidebarProps {
+interface Props {
   routes: Route[];
 }
 
@@ -46,7 +46,7 @@ const styles = {
   },
 };
 
-export const Sidebar: React.FC<SidebarProps> = ({ routes }) => {
+export const Sidebar: React.FC<Props> = ({ routes }) => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
