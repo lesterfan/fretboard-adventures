@@ -9,6 +9,7 @@ import _ from "lodash";
 import { Typography } from "@mui/material";
 import MusicalKeyTips from "../components/MusicalKeyTips";
 import GenericQuestionComponent from "../components/GenericQuestionComponent";
+import { useSettings } from "../context/SettingsContext";
 
 const styles = {
   answerText: {
@@ -33,8 +34,7 @@ const getChordNumber = (keyName: string, chordName: string): number => {
 };
 
 const IsChordInKey: React.FC = () => {
-  const [includeMinorKeys, setIncludeMinorKeys] = useState<boolean>(false);
-  const [showTips, setShowTips] = useState<boolean>(false);
+  const { includeMinorKeys } = useSettings();
   const [keyName, setKeyName] = useState<string>(() => getRandomKeyName(includeMinorKeys));
   const [chord, setChord] = useState<string>(() => getRandomChordWeightedInKey(keyName));
   const resetRoundState = () => {
@@ -50,12 +50,7 @@ const IsChordInKey: React.FC = () => {
       resetRoundState={resetRoundState}
       QuestionComponent={() => (
         <>
-          <MusicalKeyTips
-            showTips={showTips}
-            setShowTips={setShowTips}
-            includeMinorKeys={includeMinorKeys}
-            setIncludeMinorKeys={setIncludeMinorKeys}
-          />
+          <MusicalKeyTips />
           <Typography variant="body1" gutterBottom>
             <b>{question}</b>
           </Typography>

@@ -6,13 +6,7 @@ import {
   getMinorKeyNotePattern,
 } from "../library/Library";
 import { Box, Checkbox, FormControlLabel, Stack, Typography } from "@mui/material";
-
-interface Props {
-  showTips: boolean;
-  setShowTips: (showTips: boolean) => void;
-  includeMinorKeys: boolean;
-  setIncludeMinorKeys: (includeMinorKeys: boolean) => void;
-}
+import { useSettings } from "../context/SettingsContext";
 
 const styles = {
   tipsContainer: {
@@ -24,12 +18,9 @@ const styles = {
   },
 };
 
-const MusicalKeyTips: React.FC<Props> = ({
-  showTips,
-  setShowTips,
-  includeMinorKeys,
-  setIncludeMinorKeys,
-}) => {
+const MusicalKeyTips: React.FC = () => {
+  const { showTips, setShowTips, includeMinorKeys, setIncludeMinorKeys } = useSettings();
+
   return (
     <>
       <Stack sx={styles.checkboxContainer}>

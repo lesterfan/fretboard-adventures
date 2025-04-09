@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import IsChordInKey from "./pages/IsChordInKey";
 import { ScoreProvider } from "./context/ScoreContext";
 import AllQuestionsCombined from "./pages/AllQuestionsCombined";
+import { SettingsProvider } from "./context/SettingsContext";
 
 const theme = createTheme({
   palette: {
@@ -58,29 +59,31 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <ScoreProvider>
-        <CssBaseline />
-        <Box sx={{ display: "flex", flexDirection: "column" }}>
-          <Sidebar routes={routes} />
-          <Box
-            component="main"
-            sx={{
-              flexGrow: 1,
-              paddingLeft: "1rem",
-              paddingTop: "4rem",
-              width: "100%",
-              minHeight: "100vh",
-            }}
-          >
-            <Routes>
-              <Route path="/" element={<AllQuestionsCombined />} />
-              <Route path="/fretboard_recognition" element={<FretboardRecognition />} />
-              <Route path="/note_on_a_string" element={<NoteOnAString />} />
-              <Route path="/key_of_a_chord" element={<KeyOfAChord />} />
-              <Route path="/is_chord_in_key" element={<IsChordInKey />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+        <SettingsProvider>
+          <CssBaseline />
+          <Box sx={{ display: "flex", flexDirection: "column" }}>
+            <Sidebar routes={routes} />
+            <Box
+              component="main"
+              sx={{
+                flexGrow: 1,
+                paddingLeft: "1rem",
+                paddingTop: "4rem",
+                width: "100%",
+                minHeight: "100vh",
+              }}
+            >
+              <Routes>
+                <Route path="/" element={<AllQuestionsCombined />} />
+                <Route path="/fretboard_recognition" element={<FretboardRecognition />} />
+                <Route path="/note_on_a_string" element={<NoteOnAString />} />
+                <Route path="/key_of_a_chord" element={<KeyOfAChord />} />
+                <Route path="/is_chord_in_key" element={<IsChordInKey />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Box>
           </Box>
-        </Box>
+        </SettingsProvider>
       </ScoreProvider>
     </ThemeProvider>
   );
