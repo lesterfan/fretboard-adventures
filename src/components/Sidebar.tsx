@@ -30,7 +30,7 @@ const styles = {
     backgroundColor: "white",
     color: "black",
     boxShadow: "none",
-    borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
+    borderBottom: "none",
   },
   toolbar: {
     justifyContent: "flex-start",

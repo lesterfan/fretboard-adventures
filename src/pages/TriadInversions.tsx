@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Typography, FormControlLabel, Checkbox } from "@mui/material";
+import { Typography } from "@mui/material";
 import { generateTriadRound, TriadRound } from "../library/Library";
 import AnswerButtonList from "../components/AnswerButtonList";
 import FretboardDiagram, { FretboardMarker } from "../components/FretboardDiagram";
@@ -9,7 +9,6 @@ const NUM_FRETS_TO_SHOW = 5;
 const TriadInversions: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
   const [round, setRound] = useState<TriadRound>(() => generateTriadRound(NUM_FRETS_TO_SHOW));
   const [showAnswer, setShowAnswer] = useState(false);
-  const [showDegrees, setShowDegrees] = useState(true);
 
   const handleNext = () => {
     setRound(generateTriadRound(NUM_FRETS_TO_SHOW));
@@ -22,7 +21,7 @@ const TriadInversions: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
   const markers: FretboardMarker[] = positions.map((p) => ({
     stringNum: p.stringNum,
     fretNum: p.fretNum,
-    label: showDegrees ? String(p.degree) : p.noteName,
+    label: String(p.degree),
   }));
 
   return (
@@ -38,18 +37,6 @@ const TriadInversions: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
         numFretsToShow={NUM_FRETS_TO_SHOW}
         highlightedStrings={[...strings]}
       />
-      {showAnswer && (
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={showDegrees}
-              onChange={(e) => setShowDegrees(e.target.checked)}
-              size="small"
-            />
-          }
-          label="Show interval degrees"
-        />
-      )}
       <AnswerButtonList
         showingAnswer={showAnswer}
         onShowAnswer={() => setShowAnswer(true)}

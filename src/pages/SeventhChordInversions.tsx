@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Typography, FormControlLabel, Checkbox } from "@mui/material";
+import { Typography } from "@mui/material";
 import { generateSeventhChordRound, SeventhChordRound } from "../library/Library";
 import AnswerButtonList from "../components/AnswerButtonList";
 import FretboardDiagram, { FretboardMarker } from "../components/FretboardDiagram";
@@ -17,7 +17,6 @@ const SeventhChordInversions: React.FC<{ onNext?: () => void }> = ({ onNext }) =
     generateSeventhChordRound(NUM_FRETS_TO_SHOW)
   );
   const [showAnswer, setShowAnswer] = useState(false);
-  const [showDegrees, setShowDegrees] = useState(true);
 
   const handleNext = () => {
     setRound(generateSeventhChordRound(NUM_FRETS_TO_SHOW));
@@ -30,7 +29,7 @@ const SeventhChordInversions: React.FC<{ onNext?: () => void }> = ({ onNext }) =
   const markers: FretboardMarker[] = positions.map((p) => ({
     stringNum: p.stringNum,
     fretNum: p.fretNum,
-    label: showDegrees ? String(p.degree) : p.noteName,
+    label: String(p.degree),
   }));
 
   return (
@@ -46,18 +45,6 @@ const SeventhChordInversions: React.FC<{ onNext?: () => void }> = ({ onNext }) =
         numFretsToShow={NUM_FRETS_TO_SHOW}
         highlightedStrings={[...strings]}
       />
-      {showAnswer && (
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={showDegrees}
-              onChange={(e) => setShowDegrees(e.target.checked)}
-              size="small"
-            />
-          }
-          label="Show interval degrees"
-        />
-      )}
       <AnswerButtonList
         showingAnswer={showAnswer}
         onShowAnswer={() => setShowAnswer(true)}
