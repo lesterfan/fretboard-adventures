@@ -44,11 +44,6 @@ const FretboardRecognition: React.FC<{ onNext?: () => void }> = ({ onNext }) => 
         onShowAnswer={() => setShowAnswer(true)}
         onNext={handleNext}
       />
-      {showAnswer && (
-        <Typography variant="body1" sx={{ marginTop: "1em" }}>
-          <b>Answer:</b> {answer}
-        </Typography>
-      )}
     </>
   );
 };
