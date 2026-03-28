@@ -52,27 +52,27 @@ const App: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
-        <CssBaseline />
-          <Box sx={{ display: "flex", flexDirection: "column" }}>
-            <Sidebar routes={routes} />
-            <Box
-              component="main"
-              sx={{
-                flexGrow: 1,
-                paddingLeft: "1rem",
-                paddingTop: "4rem",
-                width: "100%",
-                minHeight: "100vh",
-              }}
-            >
-              <Routes>
-                <Route path="/" element={<AllQuestionsCombined />} />
-                <Route path="/fretboard_recognition" element={<FretboardRecognition />} />
-                <Route path="/note_on_a_string" element={<NoteOnAString />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Box>
-          </Box>
+      <CssBaseline />
+      <Box sx={{ display: "flex", flexDirection: "column" }}>
+        <Sidebar routes={routes} />
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            paddingLeft: "1rem",
+            paddingTop: "4rem",
+            width: "100%",
+            minHeight: "100vh",
+          }}
+        >
+          <Routes>
+            <Route path="/" element={<AllQuestionsCombined />} />
+            <Route path="/fretboard_recognition" element={<FretboardRecognition />} />
+            <Route path="/note_on_a_string" element={<NoteOnAString />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Box>
+      </Box>
     </ThemeProvider>
   );
 };
