@@ -174,15 +174,15 @@ const FretboardDiagram: React.FC<FretboardDiagramProps> = ({
         const { x, y } = getMarkerPosition(marker.stringNum, marker.fretNum);
         return (
           <React.Fragment key={`marker-${i}`}>
-            <circle cx={x} cy={y} r={10} fill="#1976d2" />
+            <circle cx={x} cy={y} r={11} fill="#1976d2" />
             {marker.label && (
               <text
                 x={x}
                 y={y}
                 textAnchor="middle"
                 dominantBaseline="central"
-                fontSize="10"
-                fontWeight="bold"
+                fontSize="7"
+                // fontWeight="bold"
                 fill="white"
               >
                 {marker.label}
