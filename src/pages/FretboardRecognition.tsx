@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { getGuitarNoteName, getGuitarStringsDisclaimer } from "../library/Library";
+import { getGuitarNoteName } from "../library/Library";
 import _ from "lodash";
 import { Typography } from "@mui/material";
 import GenericQuestionComponent from "../components/GenericQuestionComponent";
+import FretboardDiagram from "../components/FretboardDiagram";
 
 const styles = {
   answerText: {
@@ -17,7 +18,6 @@ const FretboardRecognition: React.FC = () => {
     setStringNum(_.random(1, 6));
     setFretNum(_.random(1, 12));
   };
-  const question = `What note is on string ${stringNum}, fret ${fretNum}?`;
   const answer = getGuitarNoteName(stringNum, fretNum);
   return (
     <GenericQuestionComponent
@@ -25,11 +25,9 @@ const FretboardRecognition: React.FC = () => {
       QuestionComponent={() => (
         <>
           <Typography variant="body1" gutterBottom>
-            ({getGuitarStringsDisclaimer()})
+            <b>What note is at the marked position?</b>
           </Typography>
-          <Typography variant="body1" gutterBottom>
-            <b>{question}</b>
-          </Typography>
+          <FretboardDiagram stringNum={stringNum} fretNum={fretNum} />
         </>
       )}
       AnswerComponent={({ hidden }) => (
