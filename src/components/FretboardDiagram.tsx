@@ -25,13 +25,13 @@ const FretboardDiagram: React.FC<FretboardDiagramProps> = ({
   const fretsToShow = endFret - startFret + 1;
   const showNut = startFret === 1;
 
-  // Layout constants
-  const stringSpacing = 30;
-  const fretSpacing = 50;
-  const paddingLeft = 40;
-  const paddingRight = 20;
-  const paddingTop = 30;
-  const paddingBottom = 20;
+  // Layout constants — sized to fill ~360px width (iPhone 14 minus page padding)
+  const stringSpacing = 55;
+  const fretSpacing = 92;
+  const paddingLeft = 45;
+  const paddingRight = 30;
+  const paddingTop = 35;
+  const paddingBottom = 25;
   const numStrings = 6;
 
   const fretboardWidth = (numStrings - 1) * stringSpacing;
@@ -60,9 +60,9 @@ const FretboardDiagram: React.FC<FretboardDiagramProps> = ({
         <text
           key={`label-${i}`}
           x={paddingLeft + i * stringSpacing}
-          y={paddingTop - 12}
+          y={paddingTop - 14}
           textAnchor="middle"
-          fontSize="13"
+          fontSize="16"
           fontFamily="sans-serif"
           fill="#333"
         >
@@ -74,9 +74,9 @@ const FretboardDiagram: React.FC<FretboardDiagramProps> = ({
       {showNut ? (
         <rect
           x={paddingLeft - stringSpacing / 4}
-          y={paddingTop - 3}
+          y={paddingTop - 5}
           width={fretboardWidth + stringSpacing / 2}
-          height={6}
+          height={10}
           fill="#333"
           rx={1}
         />
@@ -102,7 +102,7 @@ const FretboardDiagram: React.FC<FretboardDiagramProps> = ({
             x2={paddingLeft + fretboardWidth}
             y2={y}
             stroke="#555"
-            strokeWidth={0.75}
+            strokeWidth={1.4}
           />
         );
       })}
@@ -113,11 +113,11 @@ const FretboardDiagram: React.FC<FretboardDiagramProps> = ({
         return (
           <text
             key={`fretnum-${i}`}
-            x={paddingLeft - 20}
+            x={paddingLeft - 22}
             y={y}
             textAnchor="middle"
             dominantBaseline="central"
-            fontSize="12"
+            fontSize="14"
             fontFamily="sans-serif"
             fill="#888"
           >
@@ -131,7 +131,7 @@ const FretboardDiagram: React.FC<FretboardDiagramProps> = ({
         const fret = startFret + i;
         const centerY = paddingTop + i * fretSpacing + fretSpacing / 2;
         const centerX = paddingLeft + fretboardWidth / 2;
-        const dotRadius = 4;
+        const dotRadius = 6;
         const isSingleDot = [3, 5, 7, 9].includes(fret);
         const isDoubleDot = fret === 12;
 
@@ -164,7 +164,7 @@ const FretboardDiagram: React.FC<FretboardDiagramProps> = ({
             x2={x}
             y2={paddingTop + fretboardHeight}
             stroke={isHighlighted ? "#1976d2" : "#555"}
-            strokeWidth={isHighlighted ? 2.5 : 1.5}
+            strokeWidth={isHighlighted ? 4.5 : 2.75}
           />
         );
       })}
@@ -174,14 +174,14 @@ const FretboardDiagram: React.FC<FretboardDiagramProps> = ({
         const { x, y } = getMarkerPosition(marker.stringNum, marker.fretNum);
         return (
           <React.Fragment key={`marker-${i}`}>
-            <circle cx={x} cy={y} r={11} fill="#1976d2" />
+            <circle cx={x} cy={y} r={16} fill="#1976d2" />
             {marker.label && (
               <text
                 x={x}
                 y={y}
                 textAnchor="middle"
                 dominantBaseline="central"
-                fontSize="7"
+                fontSize="11"
                 // fontWeight="bold"
                 fill="white"
               >
