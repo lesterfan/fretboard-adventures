@@ -1,12 +1,11 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { Box, CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import FretboardRecognition from "./pages/FretboardRecognition";
 import NoteOnAString from "./pages/NoteOnAString";
 import TriadInversions from "./pages/TriadInversions";
 import SeventhChordInversions from "./pages/SeventhChordInversions";
 import { Sidebar } from "./components/Sidebar";
-import NotFound from "./pages/NotFound";
 import AllQuestionsCombined from "./pages/AllQuestionsCombined";
 
 const theme = createTheme({
@@ -75,7 +74,7 @@ const App: React.FC = () => {
             <Route path="/note_on_a_string" element={<NoteOnAString />} />
             <Route path="/triad_inversions" element={<TriadInversions />} />
             <Route path="/seventh_chord_inversions" element={<SeventhChordInversions />} />
-            <Route path="*" element={<NotFound />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Box>
       </Box>
