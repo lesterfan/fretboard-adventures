@@ -1,8 +1,12 @@
 import {
   findNotePositions,
   findTriadPositions,
+  findSeventhChordPositions,
+  generateSeventhChordRound,
   getGuitarNoteName,
   getTriadNotes,
+  getSeventhChordNotes,
+  SeventhChordInversion,
 } from "../Library";
 
 describe("getGuitarNoteName", () => {
@@ -136,5 +140,94 @@ describe("findTriadPositions", () => {
     expect(second!.find((p) => p.stringNum === 4)!.degree).toBe(5);
     expect(second!.find((p) => p.stringNum === 3)!.degree).toBe(1);
     expect(second!.find((p) => p.stringNum === 2)!.degree).toBe(3);
+  });
+});
+
+describe("getSeventhChordNotes", () => {
+  test("should return correct notes for C dominant 7", () => {
+    expect(getSeventhChordNotes("C", "dominant7")).toEqual(["C", "E", "G", "A#/Bb"]);
+  });
+
+  test("should return correct notes for A minor 7", () => {
+    expect(getSeventhChordNotes("A", "minor7")).toEqual(["A", "C", "E", "G"]);
+  });
+
+  test("should return correct notes for F major 7", () => {
+    expect(getSeventhChordNotes("F", "major7")).toEqual(["F", "A", "C", "E"]);
+  });
+
+  test("should throw for invalid root note", () => {
+    expect(() => getSeventhChordNotes("X", "dominant7")).toThrow("Invalid root note");
+  });
+});
+
+describe("findSeventhChordPositions", () => {
+  test("should return valid positions when chord fits in range", () => {
+    // C dominant 7 root position (1,7,3,5) on strings [6,4,3,2], frets 7-12:
+    // String 6 (E): C at fret 8, String 4 (D): A#/Bb at fret 8,
+    // String 3 (G): E at fret 9, String 2 (B): G at fret 8
+    const result = findSeventhChordPositions("C", "dominant7", "root", [6, 4, 3, 2], 7, 12);
+    expect(result).not.toBeNull();
+    expect(result).toHaveLength(4);
+    expect(result).toContainEqual({ stringNum: 6, fretNum: 8, degree: 1, noteName: "C" });
+    expect(result).toContainEqual({ stringNum: 4, fretNum: 8, degree: 7, noteName: "A#/Bb" });
+    expect(result).toContainEqual({ stringNum: 3, fretNum: 9, degree: 3, noteName: "E" });
+    expect(result).toContainEqual({ stringNum: 2, fretNum: 8, degree: 5, noteName: "G" });
+  });
+
+  test("should return null when a note cannot be found in range", () => {
+    // C dominant 7 root position needs C on string 6 (fret 8), not in 1-3
+    const result = findSeventhChordPositions("C", "dominant7", "root", [6, 4, 3, 2], 1, 3);
+    expect(result).toBeNull();
+  });
+
+  test("should assign degrees correctly for each inversion", () => {
+    // C dominant 7 = C, E, G, A#/Bb on strings [6,4,3,2], frets 7-12
+
+    // Root position: (1, 7, 3, 5)
+    const root = findSeventhChordPositions("C", "dominant7", "root", [6, 4, 3, 2], 7, 12);
+    expect(root).not.toBeNull();
+    expect(root!.find((p) => p.stringNum === 6)!.degree).toBe(1);
+    expect(root!.find((p) => p.stringNum === 4)!.degree).toBe(7);
+    expect(root!.find((p) => p.stringNum === 3)!.degree).toBe(3);
+    expect(root!.find((p) => p.stringNum === 2)!.degree).toBe(5);
+
+    // Third inversion: (7, 5, 1, 3) — A#/Bb on string 6 is at fret 6, so use wider range
+    const third = findSeventhChordPositions("C", "dominant7", "third", [6, 4, 3, 2], 4, 10);
+    expect(third).not.toBeNull();
+    expect(third!.find((p) => p.stringNum === 6)!.degree).toBe(7);
+    expect(third!.find((p) => p.stringNum === 4)!.degree).toBe(5);
+    expect(third!.find((p) => p.stringNum === 3)!.degree).toBe(1);
+    expect(third!.find((p) => p.stringNum === 2)!.degree).toBe(3);
+  });
+
+  test("should detect when multiple inversions fit the same range", () => {
+    // D dominant 7, frets 7-11: multiple inversions fit
+    const inversions: SeventhChordInversion[] = ["root", "first", "second", "third"];
+    const fitting = inversions.filter(
+      (inv) => findSeventhChordPositions("D", "dominant7", inv, [6, 4, 3, 2], 7, 11) !== null
+    );
+    expect(fitting.length).toBeGreaterThan(1);
+  });
+
+  test("generateSeventhChordRound should produce rounds with a unique inversion", () => {
+    const inversions: SeventhChordInversion[] = ["root", "first", "second", "third"];
+    for (let i = 0; i < 20; i++) {
+      const round = generateSeventhChordRound(5);
+      const endFret = round.startFret + 4;
+      const fitting = inversions.filter(
+        (inv) =>
+          findSeventhChordPositions(
+            round.rootNote,
+            round.chordType,
+            inv,
+            round.strings,
+            round.startFret,
+            endFret
+          ) !== null
+      );
+      expect(fitting).toHaveLength(1);
+      expect(fitting[0]).toBe(round.inversion);
+    }
   });
 });

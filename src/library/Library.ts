@@ -140,6 +140,134 @@ export function generateTriadRound(numFretsToShow: number): TriadRound {
   return { rootNote, triadType, inversion, strings, startFret, positions };
 }
 
+// --- Seventh Chord Logic ---
+
+export type SeventhChordType = "dominant7" | "minor7" | "major7";
+export type SeventhChordInversion = "root" | "first" | "second" | "third";
+
+export interface SeventhChordPosition {
+  stringNum: number;
+  fretNum: number;
+  degree: number; // 1, 3, 5, or 7
+  noteName: string;
+}
+
+export interface SeventhChordRound {
+  rootNote: string;
+  chordType: SeventhChordType;
+  inversion: SeventhChordInversion;
+  strings: [number, number, number, number];
+  startFret: number;
+  positions: SeventhChordPosition[];
+}
+
+const SEVENTH_CHORD_SEMITONES: Record<SeventhChordType, [number, number, number, number]> = {
+  dominant7: [0, 4, 7, 10],
+  minor7: [0, 3, 7, 10],
+  major7: [0, 4, 7, 11],
+};
+
+const SEVENTH_INVERSION_DEGREES: Record<SeventhChordInversion, [number, number, number, number]> = {
+  root: [1, 7, 3, 5],
+  first: [3, 1, 5, 7],
+  second: [5, 3, 7, 1],
+  third: [7, 5, 1, 3],
+};
+
+const SEVENTH_CHORD_STRINGS: [number, number, number, number] = [6, 4, 3, 2];
+const SEVENTH_CHORD_TYPES: SeventhChordType[] = ["dominant7", "minor7", "major7"];
+const SEVENTH_INVERSIONS: SeventhChordInversion[] = ["root", "first", "second", "third"];
+
+export function getSeventhChordNotes(
+  rootNote: string,
+  type: SeventhChordType
+): [string, string, string, string] {
+  const noteNames = getMusicalNoteNames();
+  const rootIndex = noteNames.indexOf(rootNote);
+  if (rootIndex === -1) {
+    throw new Error(`Invalid root note: ${rootNote}`);
+  }
+  const semitones = SEVENTH_CHORD_SEMITONES[type];
+  return semitones.map((s) => noteNames[(rootIndex + s) % 12]) as [string, string, string, string];
+}
+
+export function findSeventhChordPositions(
+  rootNote: string,
+  type: SeventhChordType,
+  inversion: SeventhChordInversion,
+  strings: [number, number, number, number],
+  startFret: number,
+  endFret: number
+): SeventhChordPosition[] | null {
+  const [note1, note3, note5, note7] = getSeventhChordNotes(rootNote, type);
+  const degreeToNote: Record<number, string> = { 1: note1, 3: note3, 5: note5, 7: note7 };
+  const degrees = SEVENTH_INVERSION_DEGREES[inversion];
+
+  const positions: SeventhChordPosition[] = [];
+  for (let i = 0; i < 4; i++) {
+    const stringNum = strings[i];
+    const degree = degrees[i];
+    const targetNote = degreeToNote[degree];
+    let found = false;
+    for (let fretNum = startFret; fretNum <= endFret; fretNum++) {
+      if (getGuitarNoteName(stringNum, fretNum) === targetNote) {
+        positions.push({ stringNum, fretNum, degree, noteName: targetNote });
+        found = true;
+        break;
+      }
+    }
+    if (!found) return null;
+  }
+  return positions;
+}
+
+export function generateSeventhChordRound(numFretsToShow: number): SeventhChordRound {
+  const maxStartFret = 12 - numFretsToShow + 1;
+  let rootNote: string;
+  let chordType: SeventhChordType;
+  let inversion: SeventhChordInversion;
+  let startFret: number;
+  let positions: SeventhChordPosition[] | null;
+  do {
+    rootNote = getRandomMuscialNoteName();
+    chordType = _.sample(SEVENTH_CHORD_TYPES) as SeventhChordType;
+    inversion = _.sample(SEVENTH_INVERSIONS) as SeventhChordInversion;
+    startFret = _.random(1, maxStartFret);
+    const endFret = startFret + numFretsToShow - 1;
+    positions = findSeventhChordPositions(
+      rootNote,
+      chordType,
+      inversion,
+      SEVENTH_CHORD_STRINGS,
+      startFret,
+      endFret
+    );
+    // Reject if multiple inversions fit — the question must have a unique answer
+    if (positions !== null) {
+      const fittingInversions = SEVENTH_INVERSIONS.filter(
+        (inv) =>
+          findSeventhChordPositions(
+            rootNote,
+            chordType,
+            inv,
+            SEVENTH_CHORD_STRINGS,
+            startFret,
+            endFret
+          ) !== null
+      );
+      if (fittingInversions.length > 1) positions = null;
+    }
+  } while (positions === null);
+  return {
+    rootNote,
+    chordType,
+    inversion,
+    strings: SEVENTH_CHORD_STRINGS,
+    startFret,
+    positions,
+  };
+}
+
 export function findNotePositions(
   noteName: string,
   startFret: number,

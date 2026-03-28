@@ -3,9 +3,15 @@ import _ from "lodash";
 import FretboardRecognition from "./FretboardRecognition";
 import NoteOnAString from "./NoteOnAString";
 import TriadRecognition from "./TriadRecognition";
+import SeventhChordRecognition from "./SeventhChordRecognition";
 
 // NB: Add new question pages to this list when adding new questions
-const AllQuestionPages = [FretboardRecognition, NoteOnAString, TriadRecognition];
+const AllQuestionPages = [
+  FretboardRecognition,
+  NoteOnAString,
+  TriadRecognition,
+  SeventhChordRecognition,
+];
 
 const getRandomQuestionIndex = () => {
   return _.random(0, AllQuestionPages.length - 1);

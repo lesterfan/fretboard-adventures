@@ -4,6 +4,7 @@ import { Box, CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import FretboardRecognition from "./pages/FretboardRecognition";
 import NoteOnAString from "./pages/NoteOnAString";
 import TriadRecognition from "./pages/TriadRecognition";
+import SeventhChordRecognition from "./pages/SeventhChordRecognition";
 import { Sidebar } from "./components/Sidebar";
 import NotFound from "./pages/NotFound";
 import AllQuestionsCombined from "./pages/AllQuestionsCombined";
@@ -50,6 +51,7 @@ const App: React.FC = () => {
     { path: "/fretboard_recognition", name: "Fretboard Recognition" },
     { path: "/note_on_a_string", name: "Note on a String" },
     { path: "/triad_recognition", name: "Triad Recognition" },
+    { path: "/seventh_chord_recognition", name: "Seventh Chord Recognition" },
   ];
 
   return (
@@ -72,6 +74,7 @@ const App: React.FC = () => {
             <Route path="/fretboard_recognition" element={<FretboardRecognition />} />
             <Route path="/note_on_a_string" element={<NoteOnAString />} />
             <Route path="/triad_recognition" element={<TriadRecognition />} />
+            <Route path="/seventh_chord_recognition" element={<SeventhChordRecognition />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Box>
