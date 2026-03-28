@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { Typography } from "@mui/material";
-import { generateSeventhChordRound, SeventhChordRound } from "../library/Library";
+import {
+  generateSeventhChordRound,
+  SeventhChordRound,
+  SEVENTH_DEGREE_LABELS,
+} from "../library/Library";
 import AnswerButtonList from "../components/AnswerButtonList";
 import FretboardDiagram, { FretboardMarker } from "../components/FretboardDiagram";
 
@@ -29,7 +33,7 @@ const SeventhChordInversions: React.FC<{ onNext?: () => void }> = ({ onNext }) =
   const markers: FretboardMarker[] = positions.map((p) => ({
     stringNum: p.stringNum,
     fretNum: p.fretNum,
-    label: String(p.degree),
+    label: SEVENTH_DEGREE_LABELS[chordType][p.degree],
   }));
 
   return (

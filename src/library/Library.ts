@@ -57,6 +57,12 @@ const TRIAD_SEMITONES: Record<TriadType, [number, number, number]> = {
   diminished: [0, 3, 6],
 };
 
+export const TRIAD_DEGREE_LABELS: Record<TriadType, Record<number, string>> = {
+  major: { 1: "1", 3: "3", 5: "5" },
+  minor: { 1: "1", 3: "b3", 5: "5" },
+  diminished: { 1: "1", 3: "b3", 5: "b5" },
+};
+
 // Degrees assigned to strings [lowest, middle, highest] for each inversion
 const INVERSION_DEGREES: Record<Inversion, [number, number, number]> = {
   root: [1, 3, 5],
@@ -165,6 +171,12 @@ const SEVENTH_CHORD_SEMITONES: Record<SeventhChordType, [number, number, number,
   dominant7: [0, 4, 7, 10],
   minor7: [0, 3, 7, 10],
   major7: [0, 4, 7, 11],
+};
+
+export const SEVENTH_DEGREE_LABELS: Record<SeventhChordType, Record<number, string>> = {
+  dominant7: { 1: "1", 3: "3", 5: "5", 7: "b7" },
+  minor7: { 1: "1", 3: "b3", 5: "5", 7: "b7" },
+  major7: { 1: "1", 3: "3", 5: "5", 7: "7" },
 };
 
 const SEVENTH_INVERSION_DEGREES: Record<SeventhChordInversion, [number, number, number, number]> = {

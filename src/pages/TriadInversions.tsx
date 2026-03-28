@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Typography } from "@mui/material";
-import { generateTriadRound, TriadRound } from "../library/Library";
+import { generateTriadRound, TriadRound, TRIAD_DEGREE_LABELS } from "../library/Library";
 import AnswerButtonList from "../components/AnswerButtonList";
 import FretboardDiagram, { FretboardMarker } from "../components/FretboardDiagram";
 
@@ -21,7 +21,7 @@ const TriadInversions: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
   const markers: FretboardMarker[] = positions.map((p) => ({
     stringNum: p.stringNum,
     fretNum: p.fretNum,
-    label: String(p.degree),
+    label: TRIAD_DEGREE_LABELS[triadType][p.degree],
   }));
 
   return (
