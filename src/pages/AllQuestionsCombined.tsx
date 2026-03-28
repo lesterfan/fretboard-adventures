@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import _ from "lodash";
 import FretboardRecognition from "./FretboardRecognition";
 import NoteOnAString from "./NoteOnAString";
-import TriadRecognition from "./TriadRecognition";
-import SeventhChordRecognition from "./SeventhChordRecognition";
+import TriadInversions from "./TriadInversions";
+import SeventhChordInversions from "./SeventhChordInversions";
 
 // NB: Add new question pages to this list when adding new questions
 const AllQuestionPages = [
   FretboardRecognition,
   NoteOnAString,
-  TriadRecognition,
-  SeventhChordRecognition,
+  TriadInversions,
+  SeventhChordInversions,
 ];
 
 const getRandomQuestionIndex = () => {
