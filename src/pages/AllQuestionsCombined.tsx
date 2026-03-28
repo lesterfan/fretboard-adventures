@@ -1,26 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import _ from "lodash";
 import FretboardRecognition from "./FretboardRecognition";
 import NoteOnAString from "./NoteOnAString";
-import KeyOfAChord from "./KeyOfAChord";
-import IsChordInKey from "./IsChordInKey";
-import { useScore } from "../context/ScoreContext";
 
 // NB: Add new question pages to this list when adding new questions
-const AllQuestionPages = [FretboardRecognition, NoteOnAString, KeyOfAChord, IsChordInKey];
+const AllQuestionPages = [FretboardRecognition, NoteOnAString];
 
 const getRandomQuestionIndex = () => {
   return _.random(0, AllQuestionPages.length - 1);
 };
 
 const AllQuestionsCombined: React.FC = () => {
-  const { score } = useScore();
+  const [round, setRound] = useState(0);
   const [currPageIndex, setCurrPageIndex] = useState<number>(() => getRandomQuestionIndex());
-  useEffect(() => {
+
+  const handleNext = () => {
     setCurrPageIndex(getRandomQuestionIndex());
-  }, [score]);
+    setRound((r) => r + 1);
+  };
+
   const CurrentQuestion = AllQuestionPages[currPageIndex];
-  return <CurrentQuestion />;
+  return <CurrentQuestion key={round} onNext={handleNext} />;
 };
 
 export default AllQuestionsCombined;

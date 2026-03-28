@@ -2,9 +2,9 @@ import { Button, Stack } from "@mui/material";
 import React from "react";
 
 interface Props {
+  showingAnswer: boolean;
   onShowAnswer: () => void;
-  onCorrect: () => void;
-  onIncorrect: () => void;
+  onNext: () => void;
 }
 
 const styles = {
@@ -13,18 +13,18 @@ const styles = {
   },
 };
 
-const AnswerButtonList: React.FC<Props> = ({ onShowAnswer, onCorrect, onIncorrect }) => {
+const AnswerButtonList: React.FC<Props> = ({ showingAnswer, onShowAnswer, onNext }) => {
   return (
     <Stack spacing={1} direction="row" sx={styles.buttonContainer}>
-      <Button variant="outlined" size="small" onClick={onShowAnswer}>
-        Show Answer
-      </Button>
-      <Button variant="outlined" size="small" onClick={onCorrect}>
-        I got it right
-      </Button>
-      <Button variant="outlined" size="small" onClick={onIncorrect}>
-        I got it wrong
-      </Button>
+      {!showingAnswer ? (
+        <Button variant="outlined" size="small" onClick={onShowAnswer}>
+          Show Answer
+        </Button>
+      ) : (
+        <Button variant="outlined" size="small" onClick={onNext}>
+          Next
+        </Button>
+      )}
     </Stack>
   );
 };

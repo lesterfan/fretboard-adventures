@@ -14,7 +14,7 @@ const styles = {
   },
 };
 
-const NoteOnAString: React.FC = () => {
+const NoteOnAString: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
   const [stringNum, setStringNum] = useState<number>(_.random(1, 6));
   const [noteName, setNoteName] = useState<string>(() => getRandomMuscialNoteName());
   const resetRoundState = () => {
@@ -26,6 +26,7 @@ const NoteOnAString: React.FC = () => {
   return (
     <GenericQuestionComponent
       resetRoundState={resetRoundState}
+      onNext={onNext}
       QuestionComponent={() => (
         <>
           <Typography variant="body1" gutterBottom>

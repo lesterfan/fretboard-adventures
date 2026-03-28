@@ -11,7 +11,7 @@ const styles = {
   },
 };
 
-const FretboardRecognition: React.FC = () => {
+const FretboardRecognition: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
   const [stringNum, setStringNum] = useState<number>(() => _.random(1, 6));
   const [fretNum, setFretNum] = useState<number>(() => _.random(1, 12));
   const resetRoundState = () => {
@@ -22,6 +22,7 @@ const FretboardRecognition: React.FC = () => {
   return (
     <GenericQuestionComponent
       resetRoundState={resetRoundState}
+      onNext={onNext}
       QuestionComponent={() => (
         <>
           <Typography variant="body1" gutterBottom>
