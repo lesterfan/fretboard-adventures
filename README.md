@@ -7,3 +7,5 @@ Some interactive flash-card style games for learning guitar.
 1. `npm install`
 1. `npm run dev`
 1. `npm run test:watch`
+1. `npm run check`
+   1. Run this before pushing
