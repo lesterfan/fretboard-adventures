@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import _ from "lodash";
 import FretboardRecognition from "./FretboardRecognition";
 import NoteOnAString from "./NoteOnAString";
+import TriadRecognition from "./TriadRecognition";
 
 // NB: Add new question pages to this list when adding new questions
-const AllQuestionPages = [FretboardRecognition, NoteOnAString];
+const AllQuestionPages = [FretboardRecognition, NoteOnAString, TriadRecognition];
 
 const getRandomQuestionIndex = () => {
   return _.random(0, AllQuestionPages.length - 1);
