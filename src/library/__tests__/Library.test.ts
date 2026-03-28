@@ -1,5 +1,6 @@
 import {
   findFretGivenStringAndNote,
+  findNotePositions,
   getChordOfKey,
   getGuitarNoteName,
   getIndexOfChordInKey,
@@ -270,5 +271,44 @@ describe("getIndexOfChordInKey", () => {
     expect(() => getIndexOfChordInKey("H", "C")).toThrow(); // Invalid key name
     expect(() => getIndexOfChordInKey("C", "D")).toThrow(); // Valid chord not in key
     expect(() => getIndexOfChordInKey("Am", "G#m")).toThrow(); // Valid chord not in key
+  });
+});
+
+describe("findNotePositions", () => {
+  test("should find note positions on specified strings in a fret range", () => {
+    // E on strings 2 and 4, frets 1-5:
+    // String 2 (B): fret 5=E
+    // String 4 (D): fret 2=E
+    const positions = findNotePositions("E", 1, 5, [2, 4]);
+    expect(positions).toEqual(
+      expect.arrayContaining([
+        { stringNum: 2, fretNum: 5 },
+        { stringNum: 4, fretNum: 2 },
+      ])
+    );
+    expect(positions).toHaveLength(2);
+  });
+
+  test("should only return positions on the requested strings", () => {
+    // C on frets 1-5, only string 2:
+    // String 2 (B): fret 1=C
+    const positions = findNotePositions("C", 1, 5, [2]);
+    expect(positions).toEqual([{ stringNum: 2, fretNum: 1 }]);
+  });
+
+  test("should return positions for fret range ending at 12", () => {
+    const positions = findNotePositions("A", 8, 12, [1, 2, 3, 4, 5, 6]);
+    for (const pos of positions) {
+      expect(getGuitarNoteName(pos.stringNum, pos.fretNum)).toBe("A");
+      expect(pos.fretNum).toBeGreaterThanOrEqual(8);
+      expect(pos.fretNum).toBeLessThanOrEqual(12);
+    }
+    expect(positions.length).toBeGreaterThan(0);
+  });
+
+  test("should return empty array when note does not appear in range", () => {
+    // Fret 1 on string 1 = F, not E
+    const positions = findNotePositions("E", 1, 1, [1]);
+    expect(positions).toEqual([]);
   });
 });

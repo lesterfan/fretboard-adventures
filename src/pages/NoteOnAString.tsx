@@ -1,48 +1,67 @@
 import React, { useState } from "react";
 import _ from "lodash";
-import {
-  findFretGivenStringAndNote,
-  getGuitarStringsDisclaimer,
-  getRandomMuscialNoteName,
-} from "../library/Library";
+import { findNotePositions, getRandomMuscialNoteName } from "../library/Library";
 import { Typography } from "@mui/material";
-import GenericQuestionComponent from "../components/GenericQuestionComponent";
+import AnswerButtonList from "../components/AnswerButtonList";
+import FretboardDiagram, { FretboardMarker } from "../components/FretboardDiagram";
 
-const styles = {
-  answerText: {
-    marginTop: "1em",
-  },
+const NUM_FRETS_TO_SHOW = 5;
+const MAX_START_FRET = 12 - NUM_FRETS_TO_SHOW + 1; // 8
+const ALL_STRINGS = [1, 2, 3, 4, 5, 6];
+
+interface RoundParams {
+  noteName: string;
+  startFret: number;
+  string: number;
+}
+
+const generateRound = (): RoundParams => {
+  let noteName: string;
+  let startFret: number;
+  let string: number;
+  do {
+    noteName = getRandomMuscialNoteName();
+    startFret = _.random(1, MAX_START_FRET);
+    string = _.sample(ALL_STRINGS) as number;
+  } while (
+    findNotePositions(noteName, startFret, startFret + NUM_FRETS_TO_SHOW - 1, [string]).length === 0
+  );
+  return { noteName, startFret, string };
 };
 
 const NoteOnAString: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
-  const [stringNum, setStringNum] = useState<number>(_.random(1, 6));
-  const [noteName, setNoteName] = useState<string>(() => getRandomMuscialNoteName());
-  const resetRoundState = () => {
-    setStringNum(_.random(1, 6));
-    setNoteName(getRandomMuscialNoteName());
+  const [round, setRound] = useState<RoundParams>(generateRound);
+  const [showAnswer, setShowAnswer] = useState(false);
+
+  const handleNext = () => {
+    setRound(generateRound());
+    setShowAnswer(false);
+    onNext?.();
   };
-  const question = `Find the lowest fret ${noteName} note on string ${stringNum}.`;
-  const answer = findFretGivenStringAndNote(stringNum, noteName);
+
+  const { noteName, startFret, string } = round;
+  const endFret = startFret + NUM_FRETS_TO_SHOW - 1;
+  const answerMarkers: FretboardMarker[] = findNotePositions(noteName, startFret, endFret, [
+    string,
+  ]);
+
   return (
-    <GenericQuestionComponent
-      resetRoundState={resetRoundState}
-      onNext={onNext}
-      QuestionComponent={() => (
-        <>
-          <Typography variant="body1" gutterBottom>
-            {getGuitarStringsDisclaimer()}
-          </Typography>
-          <Typography variant="body1" gutterBottom>
-            <b>{question}</b>
-          </Typography>
-        </>
-      )}
-      AnswerComponent={({ hidden }) => (
-        <Typography variant="body1" sx={styles.answerText} hidden={hidden}>
-          <b>Answer:</b> {answer}
-        </Typography>
-      )}
-    />
+    <>
+      <Typography variant="body1" gutterBottom>
+        <b>Find a {noteName} note here</b>
+      </Typography>
+      <FretboardDiagram
+        markers={showAnswer ? answerMarkers : []}
+        startFret={startFret}
+        numFretsToShow={NUM_FRETS_TO_SHOW}
+        highlightedStrings={[string]}
+      />
+      <AnswerButtonList
+        showingAnswer={showAnswer}
+        onShowAnswer={() => setShowAnswer(true)}
+        onNext={handleNext}
+      />
+    </>
   );
 };
 

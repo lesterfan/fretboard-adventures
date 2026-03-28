@@ -125,6 +125,23 @@ export function getChordOfKey(keyName: string, chordNum: number): string {
   return chords[chordNum - 1];
 }
 
+export function findNotePositions(
+  noteName: string,
+  startFret: number,
+  endFret: number,
+  strings: number[]
+): { stringNum: number; fretNum: number }[] {
+  const positions: { stringNum: number; fretNum: number }[] = [];
+  for (const stringNum of strings) {
+    for (let fretNum = startFret; fretNum <= endFret; fretNum++) {
+      if (getGuitarNoteName(stringNum, fretNum) === noteName) {
+        positions.push({ stringNum, fretNum });
+      }
+    }
+  }
+  return positions;
+}
+
 export function getRandomKeyName(includeMinorKeys: boolean): string {
   const allKeys = _.keys(KEY_CHORDS);
   const filteredKeys = includeMinorKeys ? allKeys : allKeys.filter((key) => !key.includes("m"));

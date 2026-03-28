@@ -1,29 +1,29 @@
 import React from "react";
 
-interface FretboardDiagramProps {
+export interface FretboardMarker {
   stringNum: number; // 1 (high E) to 6 (low E)
   fretNum: number; // 1 to 12
-  numFretsToShow?: number;
+  label?: string; // optional text inside the dot
+}
+
+interface FretboardDiagramProps {
+  markers?: FretboardMarker[];
+  startFret?: number; // explicit start fret (default 1)
+  numFretsToShow?: number; // default 5
+  highlightedStrings?: number[]; // string numbers (1-6) to draw in accent color
 }
 
 const STRING_LABELS = ["E", "A", "D", "G", "B", "E"]; // low to high, left to right
 
 const FretboardDiagram: React.FC<FretboardDiagramProps> = ({
-  stringNum,
-  fretNum,
+  markers = [],
+  startFret = 1,
   numFretsToShow = 5,
+  highlightedStrings = [],
 }) => {
-  // Calculate the fret window to display
-  const halfWindow = Math.floor(numFretsToShow / 2);
-  let startFret = Math.max(1, fretNum - halfWindow);
   const endFret = Math.min(12, startFret + numFretsToShow - 1);
-  startFret = Math.max(1, endFret - numFretsToShow + 1);
-
   const fretsToShow = endFret - startFret + 1;
   const showNut = startFret === 1;
-
-  // Convert app string number (1=high E) to diagram column (0=leftmost=low E)
-  const diagramCol = 6 - stringNum;
 
   // Layout constants
   const stringSpacing = 30;
@@ -39,10 +39,14 @@ const FretboardDiagram: React.FC<FretboardDiagramProps> = ({
   const svgWidth = paddingLeft + fretboardWidth + paddingRight;
   const svgHeight = paddingTop + fretboardHeight + paddingBottom;
 
-  // Marker position: between the fret above and the target fret line
-  const targetFretIndex = fretNum - startFret; // 0-based index within the window
-  const markerX = paddingLeft + diagramCol * stringSpacing;
-  const markerY = paddingTop + targetFretIndex * fretSpacing + fretSpacing / 2;
+  const getMarkerPosition = (stringNum: number, fretNum: number) => {
+    const diagramCol = 6 - stringNum;
+    const fretIndex = fretNum - startFret;
+    return {
+      x: paddingLeft + diagramCol * stringSpacing,
+      y: paddingTop + fretIndex * fretSpacing + fretSpacing / 2,
+    };
+  };
 
   return (
     <svg
@@ -149,6 +153,9 @@ const FretboardDiagram: React.FC<FretboardDiagramProps> = ({
       {/* Strings (vertical lines) */}
       {Array.from({ length: numStrings }, (_, i) => {
         const x = paddingLeft + i * stringSpacing;
+        // Column i (left to right) corresponds to string number 6-i (low E=6 on left, high E=1 on right)
+        const appStringNum = 6 - i;
+        const isHighlighted = highlightedStrings.includes(appStringNum);
         return (
           <line
             key={`string-${i}`}
@@ -156,25 +163,34 @@ const FretboardDiagram: React.FC<FretboardDiagramProps> = ({
             y1={paddingTop}
             x2={x}
             y2={paddingTop + fretboardHeight}
-            stroke="#555"
-            strokeWidth={1.5}
+            stroke={isHighlighted ? "#1976d2" : "#555"}
+            strokeWidth={isHighlighted ? 2.5 : 1.5}
           />
         );
       })}
 
-      {/* Marker dot */}
-      <circle cx={markerX} cy={markerY} r={10} fill="#1976d2" />
-      <text
-        x={markerX}
-        y={markerY}
-        textAnchor="middle"
-        dominantBaseline="central"
-        fontSize="10"
-        fontWeight="bold"
-        fill="white"
-      >
-        ?
-      </text>
+      {/* Markers */}
+      {markers.map((marker, i) => {
+        const { x, y } = getMarkerPosition(marker.stringNum, marker.fretNum);
+        return (
+          <React.Fragment key={`marker-${i}`}>
+            <circle cx={x} cy={y} r={10} fill="#1976d2" />
+            {marker.label && (
+              <text
+                x={x}
+                y={y}
+                textAnchor="middle"
+                dominantBaseline="central"
+                fontSize="10"
+                fontWeight="bold"
+                fill="white"
+              >
+                {marker.label}
+              </text>
+            )}
+          </React.Fragment>
+        );
+      })}
     </svg>
   );
 };
