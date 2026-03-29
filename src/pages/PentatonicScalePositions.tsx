@@ -43,7 +43,7 @@ const PentatonicScalePositions: React.FC<{ onNext?: () => void }> = ({ onNext })
         markers={showAnswer ? markers : []}
         startFret={startFret}
         numFretsToShow={NUM_FRETS_TO_SHOW}
-        highlightedStrings={[1, 2, 3, 4, 5, 6]}
+        highlightedStrings={[]}
       />
       <AnswerButtonList
         showingAnswer={showAnswer}

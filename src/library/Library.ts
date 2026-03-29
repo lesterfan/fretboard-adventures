@@ -59,12 +59,12 @@ const TRIAD_SEMITONES: Record<TriadType, [number, number, number]> = {
 
 export const DEGREE_COLORS: Record<number, string> = {
   1: "#1976d2", // blue — root
-  2: "#00897b", // teal — second
+  2: "#9e9e9e", // grey — second
   3: "#7b1fa2", // purple — third
-  4: "#00897b", // teal — fourth
+  4: "#9e9e9e", // grey — fourth
   5: "#2e7d32", // green — fifth
-  6: "#00897b", // teal — sixth
-  7: "#90a4ae", // muted blue-grey — seventh
+  6: "#9e9e9e", // grey — sixth
+  7: "#795548", // brown — seventh
 };
 
 export const TRIAD_DEGREE_LABELS: Record<TriadType, Record<number, string>> = {
