@@ -57,6 +57,13 @@ const TRIAD_SEMITONES: Record<TriadType, [number, number, number]> = {
   diminished: [0, 3, 6],
 };
 
+export const DEGREE_COLORS: Record<number, string> = {
+  1: "#1976d2", // blue — root
+  3: "#7b1fa2", // purple — third
+  5: "#2e7d32", // green — fifth
+  7: "#90a4ae", // muted blue-grey — seventh
+};
+
 export const TRIAD_DEGREE_LABELS: Record<TriadType, Record<number, string>> = {
   major: { 1: "1", 3: "3", 5: "5" },
   minor: { 1: "1", 3: "b3", 5: "5" },

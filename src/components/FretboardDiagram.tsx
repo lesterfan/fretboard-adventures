@@ -4,6 +4,7 @@ export interface FretboardMarker {
   stringNum: number; // 1 (high E) to 6 (low E)
   fretNum: number; // 1 to 12
   label?: string; // optional text inside the dot
+  color?: string; // optional fill color for the dot (default: #1976d2)
 }
 
 interface FretboardDiagramProps {
@@ -174,7 +175,7 @@ const FretboardDiagram: React.FC<FretboardDiagramProps> = ({
         const { x, y } = getMarkerPosition(marker.stringNum, marker.fretNum);
         return (
           <React.Fragment key={`marker-${i}`}>
-            <circle cx={x} cy={y} r={16} fill="#1976d2" />
+            <circle cx={x} cy={y} r={16} fill={marker.color || "#1976d2"} />
             {marker.label && (
               <text
                 x={x}
