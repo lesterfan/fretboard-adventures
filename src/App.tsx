@@ -19,17 +19,12 @@ const theme = createTheme({
   components: {
     MuiButton: {
       styleOverrides: {
-        root: {
-          "&.MuiButton-sizeSmall": {
-            minWidth: "80px",
-            padding: "2px 8px",
-            fontSize: "0.75rem",
-            color: "black",
+        outlined: {
+          color: "black",
+          borderColor: "black",
+          "&:hover": {
             borderColor: "black",
-            "&:hover": {
-              borderColor: "black",
-              backgroundColor: "rgba(0, 0, 0, 0.04)",
-            },
+            backgroundColor: "rgba(0, 0, 0, 0.04)",
           },
         },
       },
@@ -39,6 +34,9 @@ const theme = createTheme({
         h3: {
           marginTop: "0.35em",
           marginBottom: "0.35em",
+        },
+        body1: {
+          paddingLeft: "15px",
         },
       },
     },

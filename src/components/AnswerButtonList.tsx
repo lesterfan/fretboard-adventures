@@ -7,21 +7,19 @@ interface Props {
   onNext: () => void;
 }
 
-const styles = {
-  buttonContainer: {
-    marginTop: "1em",
-  },
-};
-
 const AnswerButtonList: React.FC<Props> = ({ showingAnswer, onShowAnswer, onNext }) => {
   return (
-    <Stack spacing={1} direction="row" sx={styles.buttonContainer}>
+    <Stack
+      spacing={1}
+      direction="row"
+      sx={{ marginTop: "0.5em", width: 380, maxWidth: "100%", paddingLeft: "15px" }}
+    >
       {!showingAnswer ? (
-        <Button variant="outlined" size="small" onClick={onShowAnswer}>
+        <Button variant="outlined" size="large" fullWidth onClick={onShowAnswer}>
           Show Answer
         </Button>
       ) : (
-        <Button variant="outlined" size="small" onClick={onNext}>
+        <Button variant="outlined" size="large" fullWidth onClick={onNext}>
           Next
         </Button>
       )}
