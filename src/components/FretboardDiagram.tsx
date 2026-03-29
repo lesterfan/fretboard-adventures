@@ -164,8 +164,8 @@ const FretboardDiagram: React.FC<FretboardDiagramProps> = ({
             y1={paddingTop}
             x2={x}
             y2={paddingTop + fretboardHeight}
-            stroke={isHighlighted ? "#1976d2" : "#555"}
-            strokeWidth={isHighlighted ? 4.5 : 2.75}
+            stroke={isHighlighted ? "#1976d2" : "#999"}
+            strokeWidth={isHighlighted ? 5 : 1.8}
           />
         );
       })}
