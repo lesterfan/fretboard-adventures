@@ -5,6 +5,7 @@ import {
   SeventhChordRound,
   SEVENTH_DEGREE_LABELS,
   DEGREE_COLORS,
+  articleForNote,
 } from "../library/Library";
 import AnswerButtonList from "../components/AnswerButtonList";
 import FretboardDiagram, { FretboardMarker } from "../components/FretboardDiagram";
@@ -42,7 +43,11 @@ const SeventhChordInversions: React.FC<{ onNext?: () => void }> = ({ onNext }) =
     <>
       <Typography variant="body1" gutterBottom>
         <b>
-          Find a {rootNote} {CHORD_TYPE_LABEL[chordType]} inversion here
+          Find {articleForNote(rootNote)}{" "}
+          <span style={{ color: "#1976d2" }}>
+            {rootNote} {CHORD_TYPE_LABEL[chordType]}
+          </span>{" "}
+          inversion here
         </b>
       </Typography>
       <FretboardDiagram

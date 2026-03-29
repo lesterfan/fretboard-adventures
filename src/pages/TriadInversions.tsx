@@ -5,6 +5,7 @@ import {
   TriadRound,
   TRIAD_DEGREE_LABELS,
   DEGREE_COLORS,
+  articleForNote,
 } from "../library/Library";
 import AnswerButtonList from "../components/AnswerButtonList";
 import FretboardDiagram, { FretboardMarker } from "../components/FretboardDiagram";
@@ -34,7 +35,11 @@ const TriadInversions: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
     <>
       <Typography variant="body1" gutterBottom>
         <b>
-          Find a {rootNote} {triadType} triad inversion here
+          Find {articleForNote(rootNote)}{" "}
+          <span style={{ color: "#1976d2" }}>
+            {rootNote} {triadType}
+          </span>{" "}
+          triad inversion here
         </b>
       </Typography>
       <FretboardDiagram

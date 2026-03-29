@@ -27,6 +27,11 @@ export function getRandomMuscialNoteName(): string {
   return _.sample(getMusicalNoteNames()) as string;
 }
 
+/** Returns "a" or "an" depending on whether the note name starts with a vowel sound. */
+export function articleForNote(noteName: string): "a" | "an" {
+  return /^[AEF]/.test(noteName) ? "an" : "a";
+}
+
 /**
  * Assume the guitar has six strings. Actual tuning will be reversed of rawTuning due to the standard
  * guitar notation (i.e. first string is the highest string rather than the lowest string).

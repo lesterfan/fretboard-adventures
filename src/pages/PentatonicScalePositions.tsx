@@ -36,7 +36,11 @@ const PentatonicScalePositions: React.FC<{ onNext?: () => void }> = ({ onNext })
     <>
       <Typography variant="body1" gutterBottom>
         <b>
-          Find the {rootNote} {pentatonicType} pentatonic scale here
+          Find the{" "}
+          <span style={{ color: "#1976d2" }}>
+            {rootNote} {pentatonicType}
+          </span>{" "}
+          pentatonic scale here
         </b>
       </Typography>
       <FretboardDiagram

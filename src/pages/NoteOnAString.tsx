@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import _ from "lodash";
-import { findNotePositions, getRandomMuscialNoteName } from "../library/Library";
+import { findNotePositions, getRandomMuscialNoteName, articleForNote } from "../library/Library";
 import { Typography } from "@mui/material";
 import AnswerButtonList from "../components/AnswerButtonList";
 import FretboardDiagram, { FretboardMarker } from "../components/FretboardDiagram";
@@ -48,7 +48,10 @@ const NoteOnAString: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
   return (
     <>
       <Typography variant="body1" gutterBottom>
-        <b>Find a {noteName} note here</b>
+        <b>
+          Find {articleForNote(noteName)} <span style={{ color: "#1976d2" }}>{noteName}</span> note
+          here
+        </b>
       </Typography>
       <FretboardDiagram
         markers={showAnswer ? answerMarkers : []}
