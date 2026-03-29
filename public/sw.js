@@ -1,4 +1,4 @@
-const CACHE_NAME = "fretboard-v1";
+const CACHE_NAME = "fretboard-v2";
 
 self.addEventListener("install", (event) => {
   self.skipWaiting();
