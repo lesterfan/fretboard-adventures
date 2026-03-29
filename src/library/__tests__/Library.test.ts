@@ -6,6 +6,9 @@ import {
   getGuitarNoteName,
   getTriadNotes,
   getSeventhChordNotes,
+  getPentatonicNotes,
+  findPentatonicBoxPositions,
+  generatePentatonicRound,
   SeventhChordInversion,
 } from "../Library";
 
@@ -228,6 +231,91 @@ describe("findSeventhChordPositions", () => {
       );
       expect(fitting).toHaveLength(1);
       expect(fitting[0]).toBe(round.inversion);
+    }
+  });
+});
+
+describe("getPentatonicNotes", () => {
+  test("should return correct notes for A minor pentatonic", () => {
+    const notes = getPentatonicNotes("A", "minor");
+    expect(notes).toEqual([
+      { noteName: "A", degree: 1 },
+      { noteName: "C", degree: 3 },
+      { noteName: "D", degree: 4 },
+      { noteName: "E", degree: 5 },
+      { noteName: "G", degree: 7 },
+    ]);
+  });
+
+  test("should return correct notes for C major pentatonic", () => {
+    const notes = getPentatonicNotes("C", "major");
+    expect(notes).toEqual([
+      { noteName: "C", degree: 1 },
+      { noteName: "D", degree: 2 },
+      { noteName: "E", degree: 3 },
+      { noteName: "G", degree: 5 },
+      { noteName: "A", degree: 6 },
+    ]);
+  });
+
+  test("should throw for invalid root note", () => {
+    expect(() => getPentatonicNotes("X", "minor")).toThrow("Invalid root note");
+  });
+});
+
+describe("findPentatonicBoxPositions", () => {
+  test("should return 12 positions (2 per string) for a valid box", () => {
+    // A minor pentatonic, frets 5-8 is the classic Am position 1 box
+    const result = findPentatonicBoxPositions("A", "minor", 5, 8);
+    expect(result).not.toBeNull();
+    expect(result).toHaveLength(12);
+    for (let s = 1; s <= 6; s++) {
+      expect(result!.filter((p) => p.stringNum === s)).toHaveLength(2);
+    }
+  });
+
+  test("should return null when box is incomplete", () => {
+    // Very narrow range — unlikely to fit a complete box
+    const result = findPentatonicBoxPositions("A", "minor", 1, 2);
+    expect(result).toBeNull();
+  });
+
+  test("should assign correct degrees to positions", () => {
+    const result = findPentatonicBoxPositions("A", "minor", 5, 8);
+    expect(result).not.toBeNull();
+    // All notes should be from the A minor pentatonic scale
+    const validDegrees = [1, 3, 4, 5, 7];
+    for (const pos of result!) {
+      expect(validDegrees).toContain(pos.degree);
+      // Verify the note at this position matches
+      expect(getGuitarNoteName(pos.stringNum, pos.fretNum)).toBe(pos.noteName);
+    }
+  });
+
+  test("should work for major pentatonic", () => {
+    // C major pentatonic = C, D, E, G, A (same notes as A minor pentatonic)
+    const result = findPentatonicBoxPositions("C", "major", 5, 8);
+    expect(result).not.toBeNull();
+    expect(result).toHaveLength(12);
+    const validDegrees = [1, 2, 3, 5, 6];
+    for (const pos of result!) {
+      expect(validDegrees).toContain(pos.degree);
+    }
+  });
+});
+
+describe("generatePentatonicRound", () => {
+  test("should produce valid rounds with exactly 2 notes per string", () => {
+    for (let i = 0; i < 20; i++) {
+      const round = generatePentatonicRound(5);
+      expect(round.positions).toHaveLength(12);
+      for (let s = 1; s <= 6; s++) {
+        expect(round.positions.filter((p) => p.stringNum === s)).toHaveLength(2);
+      }
+      for (const pos of round.positions) {
+        expect(pos.fretNum).toBeGreaterThanOrEqual(round.startFret);
+        expect(pos.fretNum).toBeLessThanOrEqual(round.startFret + 4);
+      }
     }
   });
 });

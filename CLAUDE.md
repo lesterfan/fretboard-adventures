@@ -29,6 +29,7 @@ Guitar string numbering: string 1 = high E, string 6 = low E. Vite base path: `/
 - **Note on a String** — find all occurrences of a note on a highlighted string
 - **Triad Inversions** — find a triad (major/minor/diminished) on 3 adjacent strings
 - **Seventh Chord Inversions** — find a seventh chord (dominant 7/minor 7/major 7) on strings 6,4,3,2
+- **Pentatonic Scale Positions** — find a minor/major pentatonic scale box position across all 6 strings
 
 ## Key conventions
 

@@ -4,6 +4,7 @@ import FretboardRecognition from "./FretboardRecognition";
 import NoteOnAString from "./NoteOnAString";
 import TriadInversions from "./TriadInversions";
 import SeventhChordInversions from "./SeventhChordInversions";
+import PentatonicScalePositions from "./PentatonicScalePositions";
 
 // NB: Add new question pages to this list when adding new questions
 const AllQuestionPages = [
@@ -11,6 +12,7 @@ const AllQuestionPages = [
   NoteOnAString,
   TriadInversions,
   SeventhChordInversions,
+  PentatonicScalePositions,
 ];
 
 const getRandomQuestionIndex = () => {

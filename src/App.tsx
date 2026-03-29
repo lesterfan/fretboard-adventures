@@ -5,6 +5,7 @@ import FretboardRecognition from "./pages/FretboardRecognition";
 import NoteOnAString from "./pages/NoteOnAString";
 import TriadInversions from "./pages/TriadInversions";
 import SeventhChordInversions from "./pages/SeventhChordInversions";
+import PentatonicScalePositions from "./pages/PentatonicScalePositions";
 import { Sidebar } from "./components/Sidebar";
 import AllQuestionsCombined from "./pages/AllQuestionsCombined";
 
@@ -51,6 +52,7 @@ const App: React.FC = () => {
     { path: "/note_on_a_string", name: "Note on a String" },
     { path: "/triad_inversions", name: "Triad Inversions" },
     { path: "/seventh_chord_inversions", name: "Seventh Chord Inversions" },
+    { path: "/pentatonic", name: "Pentatonic Scale Positions" },
   ];
 
   return (
@@ -74,6 +76,7 @@ const App: React.FC = () => {
             <Route path="/note_on_a_string" element={<NoteOnAString />} />
             <Route path="/triad_inversions" element={<TriadInversions />} />
             <Route path="/seventh_chord_inversions" element={<SeventhChordInversions />} />
+            <Route path="/pentatonic" element={<PentatonicScalePositions />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Box>

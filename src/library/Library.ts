@@ -59,8 +59,11 @@ const TRIAD_SEMITONES: Record<TriadType, [number, number, number]> = {
 
 export const DEGREE_COLORS: Record<number, string> = {
   1: "#1976d2", // blue — root
+  2: "#00897b", // teal — second
   3: "#7b1fa2", // purple — third
+  4: "#00897b", // teal — fourth
   5: "#2e7d32", // green — fifth
+  6: "#00897b", // teal — sixth
   7: "#90a4ae", // muted blue-grey — seventh
 };
 
@@ -302,4 +305,110 @@ export function findNotePositions(
     }
   }
   return positions;
+}
+
+// --- Pentatonic Scale Logic ---
+
+export type PentatonicType = "minor" | "major";
+
+export interface PentatonicPosition {
+  stringNum: number;
+  fretNum: number;
+  degree: number;
+  noteName: string;
+}
+
+export interface PentatonicRound {
+  rootNote: string;
+  pentatonicType: PentatonicType;
+  positions: PentatonicPosition[];
+  startFret: number;
+}
+
+const PENTATONIC_SEMITONES: Record<PentatonicType, number[]> = {
+  minor: [0, 3, 5, 7, 10], // 1, b3, 4, 5, b7
+  major: [0, 2, 4, 7, 9], // 1, 2, 3, 5, 6
+};
+
+const PENTATONIC_DEGREE_MAP: Record<PentatonicType, Record<number, number>> = {
+  minor: { 0: 1, 3: 3, 5: 4, 7: 5, 10: 7 },
+  major: { 0: 1, 2: 2, 4: 3, 7: 5, 9: 6 },
+};
+
+export const PENTATONIC_DEGREE_LABELS: Record<PentatonicType, Record<number, string>> = {
+  minor: { 1: "1", 3: "b3", 4: "4", 5: "5", 7: "b7" },
+  major: { 1: "1", 2: "2", 3: "3", 5: "5", 6: "6" },
+};
+
+export function getPentatonicNotes(
+  rootNote: string,
+  type: PentatonicType
+): { noteName: string; degree: number }[] {
+  const noteNames = getMusicalNoteNames();
+  const rootIndex = noteNames.indexOf(rootNote);
+  if (rootIndex === -1) {
+    throw new Error(`Invalid root note: ${rootNote}`);
+  }
+  const semitones = PENTATONIC_SEMITONES[type];
+  const degreeMap = PENTATONIC_DEGREE_MAP[type];
+  return semitones.map((s) => ({
+    noteName: noteNames[(rootIndex + s) % 12],
+    degree: degreeMap[s],
+  }));
+}
+
+const ALL_STRINGS = [1, 2, 3, 4, 5, 6];
+const PENTATONIC_TYPES: PentatonicType[] = ["minor", "major"];
+
+export function findPentatonicBoxPositions(
+  rootNote: string,
+  type: PentatonicType,
+  startFret: number,
+  endFret: number
+): PentatonicPosition[] | null {
+  const scaleNotes = getPentatonicNotes(rootNote, type);
+  const noteToDegreeLookup: Record<string, number> = {};
+  for (const { noteName, degree } of scaleNotes) {
+    noteToDegreeLookup[noteName] = degree;
+  }
+
+  const positions: PentatonicPosition[] = [];
+  for (const stringNum of ALL_STRINGS) {
+    const stringPositions: PentatonicPosition[] = [];
+    for (let fretNum = startFret; fretNum <= endFret; fretNum++) {
+      const noteName = getGuitarNoteName(stringNum, fretNum);
+      if (noteName in noteToDegreeLookup) {
+        stringPositions.push({
+          stringNum,
+          fretNum,
+          degree: noteToDegreeLookup[noteName],
+          noteName,
+        });
+      }
+    }
+    // A complete box position requires exactly 2 notes per string
+    if (stringPositions.length !== 2) return null;
+    positions.push(...stringPositions);
+  }
+  return positions;
+}
+
+export function generatePentatonicRound(numFretsToShow: number): PentatonicRound {
+  const maxStartFret = 12 - numFretsToShow + 1;
+  let rootNote: string;
+  let pentatonicType: PentatonicType;
+  let startFret: number;
+  let positions: PentatonicPosition[] | null;
+  do {
+    rootNote = getRandomMuscialNoteName();
+    pentatonicType = _.sample(PENTATONIC_TYPES) as PentatonicType;
+    startFret = _.random(1, maxStartFret);
+    positions = findPentatonicBoxPositions(
+      rootNote,
+      pentatonicType,
+      startFret,
+      startFret + numFretsToShow - 1
+    );
+  } while (positions === null);
+  return { rootNote, pentatonicType, positions, startFret };
 }
