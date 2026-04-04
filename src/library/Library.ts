@@ -579,7 +579,7 @@ export const SEVENTH_ARPEGGIO_DISPLAY_NAMES: Record<SeventhArpeggioType, string>
   dominant7: "dominant 7",
   minor7: "minor 7",
   major7: "major 7",
-  m7b5: "m7b5",
+  m7b5: "m7b5 (half-diminished)",
 };
 
 const SEVENTH_ARPEGGIO_DEGREE_MAP: Record<number, number> = { 0: 1, 1: 3, 2: 5, 3: 7 };

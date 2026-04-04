@@ -39,11 +39,11 @@ const SeventhChordArpeggios: React.FC<{ onNext?: () => void }> = ({ onNext }) =>
     <>
       <Typography variant="body1" gutterBottom>
         <b>
-          Find notes of {articleForNote(rootNote)}{" "}
+          Find all{" "}
           <span style={{ color: "#1976d2" }}>
             {rootNote} {SEVENTH_ARPEGGIO_DISPLAY_NAMES[arpeggioType]}
           </span>{" "}
-          arpeggio here
+          arpeggio notes here
         </b>
       </Typography>
       <FretboardDiagram
