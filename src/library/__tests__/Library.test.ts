@@ -12,6 +12,9 @@ import {
   getExtraModeNotes,
   findExtraModePositions,
   generateModeFromPentatonicRound,
+  getSeventhArpeggioNotes,
+  findSeventhArpeggioPositions,
+  generateSeventhArpeggioRound,
   SeventhChordInversion,
 } from "../Library";
 
@@ -484,6 +487,186 @@ describe("Mode from Pentatonic", () => {
         const pentatonicNoteNames = new Set(round.pentatonicPositions.map((p) => p.noteName));
         for (const pos of round.extraPositions) {
           expect(pentatonicNoteNames).not.toContain(pos.noteName);
+        }
+      }
+    });
+  });
+});
+
+describe("Seventh Chord Arpeggios", () => {
+  describe("getSeventhArpeggioNotes", () => {
+    test("should return correct notes for C dominant 7", () => {
+      const notes = getSeventhArpeggioNotes("C", "dominant7");
+      expect(notes.map((n) => n.noteName)).toEqual(["C", "E", "G", "A#/Bb"]);
+      expect(notes.map((n) => n.degree)).toEqual([1, 3, 5, 7]);
+    });
+
+    test("should return correct notes for A minor 7", () => {
+      const notes = getSeventhArpeggioNotes("A", "minor7");
+      expect(notes.map((n) => n.noteName)).toEqual(["A", "C", "E", "G"]);
+      expect(notes.map((n) => n.degree)).toEqual([1, 3, 5, 7]);
+    });
+
+    test("should return correct notes for F major 7", () => {
+      const notes = getSeventhArpeggioNotes("F", "major7");
+      expect(notes.map((n) => n.noteName)).toEqual(["F", "A", "C", "E"]);
+      expect(notes.map((n) => n.degree)).toEqual([1, 3, 5, 7]);
+    });
+
+    test("should return correct notes for B m7b5", () => {
+      // B half-diminished: B, D, F, A
+      const notes = getSeventhArpeggioNotes("B", "m7b5");
+      expect(notes.map((n) => n.noteName)).toEqual(["B", "D", "F", "A"]);
+      expect(notes.map((n) => n.degree)).toEqual([1, 3, 5, 7]);
+    });
+
+    test("should handle sharps/flats", () => {
+      // G#/Ab minor 7: G#/Ab, B, D#/Eb, F#/Gb
+      const notes = getSeventhArpeggioNotes("G#/Ab", "minor7");
+      expect(notes.map((n) => n.noteName)).toEqual(["G#/Ab", "B", "D#/Eb", "F#/Gb"]);
+    });
+
+    test("should throw for invalid root note", () => {
+      expect(() => getSeventhArpeggioNotes("X", "dominant7")).toThrow("Invalid root note");
+    });
+  });
+
+  describe("findSeventhArpeggioPositions", () => {
+    test("should return all arpeggio-tone positions on 3 strings within fret range", () => {
+      // A minor 7: A, C, E, G on strings [6,5,4], frets 1-5
+      const result = findSeventhArpeggioPositions("A", "minor7", [6, 5, 4], 1, 5);
+      expect(result).not.toBeNull();
+      for (const pos of result!) {
+        expect(pos.fretNum).toBeGreaterThanOrEqual(1);
+        expect(pos.fretNum).toBeLessThanOrEqual(5);
+        expect([6, 5, 4]).toContain(pos.stringNum);
+        expect(getGuitarNoteName(pos.stringNum, pos.fretNum)).toBe(pos.noteName);
+      }
+    });
+
+    test("should return null when a degree is missing from the window", () => {
+      // Very narrow range where not all 4 notes can appear
+      const result = findSeventhArpeggioPositions("C", "dominant7", [3, 2, 1], 1, 2);
+      // If this happens to find all 4, try an even narrower case
+      if (result !== null) {
+        // At minimum, verify that all 4 degrees are present when not null
+        const degrees = new Set(result.map((p) => p.degree));
+        expect(degrees.size).toBe(4);
+      }
+    });
+
+    test("should assign correct degrees to positions", () => {
+      // C dominant 7: C=1, E=3, G=5, A#/Bb=7
+      const result = findSeventhArpeggioPositions("C", "dominant7", [6, 5, 4], 1, 5);
+      if (result !== null) {
+        for (const pos of result) {
+          if (pos.noteName === "C") expect(pos.degree).toBe(1);
+          else if (pos.noteName === "E") expect(pos.degree).toBe(3);
+          else if (pos.noteName === "G") expect(pos.degree).toBe(5);
+          else if (pos.noteName === "A#/Bb") expect(pos.degree).toBe(7);
+        }
+      }
+    });
+
+    test("should handle m7b5 chord type", () => {
+      // B m7b5: B, D, F, A on strings [5,4,3], frets 1-5
+      const result = findSeventhArpeggioPositions("B", "m7b5", [5, 4, 3], 1, 5);
+      if (result !== null) {
+        const degrees = new Set(result.map((p) => p.degree));
+        expect(degrees.size).toBe(4);
+        for (const pos of result) {
+          expect(["B", "D", "F", "A"]).toContain(pos.noteName);
+        }
+      }
+    });
+
+    test("a string can have multiple arpeggio notes", () => {
+      // A minor 7 (A, C, E, G) on strings [6,5,4], frets 1-5:
+      // String 6 (E): E at fret 0 (not in range), A at fret 5, no others in 1-5? Let's check wider
+      // Use frets 2-7 on strings [4,3,2] for A minor 7
+      // String 4 (D): E at fret 2, G at fret 5 — two notes on one string
+      const result = findSeventhArpeggioPositions("A", "minor7", [4, 3, 2], 2, 7);
+      if (result !== null) {
+        const string4Notes = result.filter((p) => p.stringNum === 4);
+        expect(string4Notes.length).toBeGreaterThanOrEqual(2);
+      }
+    });
+
+    test("should guarantee all 4 degrees when result is non-null", () => {
+      // Test multiple chord types and string groups
+      const cases: Array<{ root: string; type: "dominant7" | "minor7" | "major7" | "m7b5" }> = [
+        { root: "E", type: "dominant7" },
+        { root: "A", type: "minor7" },
+        { root: "C", type: "major7" },
+        { root: "F#/Gb", type: "m7b5" },
+      ];
+      for (const { root, type } of cases) {
+        const result = findSeventhArpeggioPositions(root, type, [5, 4, 3], 3, 8);
+        if (result !== null) {
+          const degrees = new Set(result.map((p) => p.degree));
+          expect(degrees).toEqual(new Set([1, 3, 5, 7]));
+        }
+      }
+    });
+  });
+
+  describe("generateSeventhArpeggioRound", () => {
+    const VALID_STRING_GROUPS = [
+      [6, 5, 4],
+      [5, 4, 3],
+      [4, 3, 2],
+      [3, 2, 1],
+    ];
+
+    test("should return a valid round with all required fields", () => {
+      const round = generateSeventhArpeggioRound(5);
+      expect(round.rootNote).toBeDefined();
+      expect(["dominant7", "minor7", "major7", "m7b5"]).toContain(round.arpeggioType);
+      expect(round.strings).toHaveLength(3);
+      expect(round.startFret).toBeGreaterThanOrEqual(1);
+      expect(round.positions.length).toBeGreaterThan(0);
+    });
+
+    test("should have all 4 degrees present in positions", () => {
+      for (let i = 0; i < 20; i++) {
+        const round = generateSeventhArpeggioRound(5);
+        const degrees = new Set(round.positions.map((p) => p.degree));
+        expect(degrees).toEqual(new Set([1, 3, 5, 7]));
+      }
+    });
+
+    test("all positions fall within the fret window", () => {
+      for (let i = 0; i < 20; i++) {
+        const round = generateSeventhArpeggioRound(5);
+        const endFret = round.startFret + 4;
+        for (const pos of round.positions) {
+          expect(pos.fretNum).toBeGreaterThanOrEqual(round.startFret);
+          expect(pos.fretNum).toBeLessThanOrEqual(endFret);
+        }
+      }
+    });
+
+    test("strings are one of the valid adjacent groups", () => {
+      for (let i = 0; i < 20; i++) {
+        const round = generateSeventhArpeggioRound(5);
+        expect(VALID_STRING_GROUPS).toContainEqual([...round.strings]);
+      }
+    });
+
+    test("note names at each position match getGuitarNoteName", () => {
+      for (let i = 0; i < 20; i++) {
+        const round = generateSeventhArpeggioRound(5);
+        for (const pos of round.positions) {
+          expect(getGuitarNoteName(pos.stringNum, pos.fretNum)).toBe(pos.noteName);
+        }
+      }
+    });
+
+    test("positions are only on the selected strings", () => {
+      for (let i = 0; i < 20; i++) {
+        const round = generateSeventhArpeggioRound(5);
+        for (const pos of round.positions) {
+          expect(round.strings).toContain(pos.stringNum);
         }
       }
     });

@@ -43,6 +43,8 @@ Guitar string numbering: string 1 = high E, string 6 = low E. Vite base path:
 - **Mode from Pentatonic** — given a pentatonic box, find the remaining notes to complete a mode
   (Dorian/Aeolian/Phrygian for minor, Ionian/Mixolydian/Lydian for major); user-configurable mode
   selector defaults to Ionian, Dorian, Aeolian
+- **Seventh Chord Arpeggios** — find all notes of a seventh chord arpeggio (dominant 7/minor
+  7/major 7/m7b5) on 3 adjacent highlighted strings within a 5-fret window
 
 ## Key conventions
 

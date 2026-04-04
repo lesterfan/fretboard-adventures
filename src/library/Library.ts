@@ -540,6 +540,133 @@ export function findExtraModePositions(
   return positions;
 }
 
+// --- Seventh Chord Arpeggio Logic ---
+
+export type SeventhArpeggioType = "dominant7" | "minor7" | "major7" | "m7b5";
+
+export interface SeventhArpeggioPosition {
+  stringNum: number;
+  fretNum: number;
+  degree: number; // 1, 3, 5, or 7
+  noteName: string;
+}
+
+export interface SeventhArpeggioRound {
+  rootNote: string;
+  arpeggioType: SeventhArpeggioType;
+  strings: [number, number, number];
+  startFret: number;
+  positions: SeventhArpeggioPosition[];
+}
+
+const SEVENTH_ARPEGGIO_SEMITONES: Record<SeventhArpeggioType, [number, number, number, number]> = {
+  dominant7: [0, 4, 7, 10],
+  minor7: [0, 3, 7, 10],
+  major7: [0, 4, 7, 11],
+  m7b5: [0, 3, 6, 10],
+};
+
+export const SEVENTH_ARPEGGIO_DEGREE_LABELS: Record<SeventhArpeggioType, Record<number, string>> = {
+  dominant7: { 1: "1", 3: "3", 5: "5", 7: "b7" },
+  minor7: { 1: "1", 3: "b3", 5: "5", 7: "b7" },
+  major7: { 1: "1", 3: "3", 5: "5", 7: "7" },
+  m7b5: { 1: "1", 3: "b3", 5: "b5", 7: "b7" },
+};
+
+export const SEVENTH_ARPEGGIO_DISPLAY_NAMES: Record<SeventhArpeggioType, string> = {
+  dominant7: "dominant 7",
+  minor7: "minor 7",
+  major7: "major 7",
+  m7b5: "m7b5",
+};
+
+const SEVENTH_ARPEGGIO_DEGREE_MAP: Record<number, number> = { 0: 1, 1: 3, 2: 5, 3: 7 };
+const SEVENTH_ARPEGGIO_TYPES: SeventhArpeggioType[] = ["dominant7", "minor7", "major7", "m7b5"];
+
+export function getSeventhArpeggioNotes(
+  rootNote: string,
+  type: SeventhArpeggioType
+): [
+  { noteName: string; degree: number },
+  { noteName: string; degree: number },
+  { noteName: string; degree: number },
+  { noteName: string; degree: number },
+] {
+  const noteNames = getMusicalNoteNames();
+  const rootIndex = noteNames.indexOf(rootNote);
+  if (rootIndex === -1) {
+    throw new Error(`Invalid root note: ${rootNote}`);
+  }
+  const semitones = SEVENTH_ARPEGGIO_SEMITONES[type];
+  return semitones.map((s, i) => ({
+    noteName: noteNames[(rootIndex + s) % 12],
+    degree: SEVENTH_ARPEGGIO_DEGREE_MAP[i],
+  })) as [
+    { noteName: string; degree: number },
+    { noteName: string; degree: number },
+    { noteName: string; degree: number },
+    { noteName: string; degree: number },
+  ];
+}
+
+export function findSeventhArpeggioPositions(
+  rootNote: string,
+  type: SeventhArpeggioType,
+  strings: [number, number, number],
+  startFret: number,
+  endFret: number
+): SeventhArpeggioPosition[] | null {
+  const arpeggioNotes = getSeventhArpeggioNotes(rootNote, type);
+  const noteToDegreeLookup: Record<string, number> = {};
+  for (const { noteName, degree } of arpeggioNotes) {
+    noteToDegreeLookup[noteName] = degree;
+  }
+
+  const positions: SeventhArpeggioPosition[] = [];
+  for (const stringNum of strings) {
+    for (let fretNum = startFret; fretNum <= endFret; fretNum++) {
+      const noteName = getGuitarNoteName(stringNum, fretNum);
+      if (noteName in noteToDegreeLookup) {
+        positions.push({
+          stringNum,
+          fretNum,
+          degree: noteToDegreeLookup[noteName],
+          noteName,
+        });
+      }
+    }
+  }
+
+  // Reject if any of the 4 degrees is missing
+  const foundDegrees = new Set(positions.map((p) => p.degree));
+  if (foundDegrees.size < 4) return null;
+
+  return positions;
+}
+
+export function generateSeventhArpeggioRound(numFretsToShow: number): SeventhArpeggioRound {
+  const maxStartFret = 12 - numFretsToShow + 1;
+  let rootNote: string;
+  let arpeggioType: SeventhArpeggioType;
+  let strings: [number, number, number];
+  let startFret: number;
+  let positions: SeventhArpeggioPosition[] | null;
+  do {
+    rootNote = getRandomMuscialNoteName();
+    arpeggioType = _.sample(SEVENTH_ARPEGGIO_TYPES) as SeventhArpeggioType;
+    strings = _.sample(ADJACENT_STRING_GROUPS) as [number, number, number];
+    startFret = _.random(1, maxStartFret);
+    positions = findSeventhArpeggioPositions(
+      rootNote,
+      arpeggioType,
+      strings,
+      startFret,
+      startFret + numFretsToShow - 1
+    );
+  } while (positions === null);
+  return { rootNote, arpeggioType, strings, startFret, positions };
+}
+
 export function generateModeFromPentatonicRound(
   numFretsToShow: number,
   enabledModes: ModeName[] = ALL_MODES
