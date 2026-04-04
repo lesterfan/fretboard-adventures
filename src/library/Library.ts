@@ -73,9 +73,9 @@ export const DEGREE_COLORS: Record<number, string> = {
 };
 
 export const SECONDARY_DEGREE_COLORS: Record<number, string> = {
-  2: "#e65100", // orange — second
+  2: "#00838f", // teal — second
   4: "#c62828", // red — fourth
-  6: "#00838f", // teal — sixth
+  6: "#e65100", // orange — sixth
   7: "#6a1b9a", // deep purple — seventh
 };
 
