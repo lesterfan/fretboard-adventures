@@ -11,6 +11,7 @@ import ModeFromPentatonic from "./pages/ModeFromPentatonic";
 import SeventhChordArpeggios from "./pages/SeventhChordArpeggios";
 import { Sidebar } from "./components/Sidebar";
 import AllQuestionsCombined from "./pages/AllQuestionsCombined";
+import { GlobalSettingsProvider } from "./GlobalSettingsContext";
 
 const theme = createTheme({
   palette: {
@@ -60,35 +61,37 @@ const App: React.FC = () => {
   ];
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Box sx={{ display: "flex", flexDirection: "column" }}>
-        <Sidebar routes={routes} />
-        <Box
-          component="main"
-          sx={{
-            flexGrow: 1,
-            paddingLeft: "1rem",
-            paddingTop: "4rem",
-            width: "100%",
-            minHeight: "100vh",
-          }}
-        >
-          <Routes>
-            <Route path="/" element={<AllQuestionsCombined />} />
-            <Route path="/fretboard_recognition" element={<FretboardRecognition />} />
-            <Route path="/note_on_a_string" element={<NoteOnAString />} />
-            <Route path="/triad_inversions" element={<TriadInversions />} />
-            <Route path="/seventh_chord_inversions" element={<SeventhChordInversions />} />
-            <Route path="/pentatonic" element={<PentatonicScalePositions />} />
-            <Route path="/pentatonic_degrees" element={<PentatonicDegreeIdentification />} />
-            <Route path="/mode_from_pentatonic" element={<ModeFromPentatonic />} />
-            <Route path="/seventh_chord_arpeggios" element={<SeventhChordArpeggios />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+    <GlobalSettingsProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <Sidebar routes={routes} />
+          <Box
+            component="main"
+            sx={{
+              flexGrow: 1,
+              paddingLeft: "1rem",
+              paddingTop: "4rem",
+              width: "100%",
+              minHeight: "100vh",
+            }}
+          >
+            <Routes>
+              <Route path="/" element={<AllQuestionsCombined />} />
+              <Route path="/fretboard_recognition" element={<FretboardRecognition />} />
+              <Route path="/note_on_a_string" element={<NoteOnAString />} />
+              <Route path="/triad_inversions" element={<TriadInversions />} />
+              <Route path="/seventh_chord_inversions" element={<SeventhChordInversions />} />
+              <Route path="/pentatonic" element={<PentatonicScalePositions />} />
+              <Route path="/pentatonic_degrees" element={<PentatonicDegreeIdentification />} />
+              <Route path="/mode_from_pentatonic" element={<ModeFromPentatonic />} />
+              <Route path="/seventh_chord_arpeggios" element={<SeventhChordArpeggios />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </Box>
         </Box>
-      </Box>
-    </ThemeProvider>
+      </ThemeProvider>
+    </GlobalSettingsProvider>
   );
 };
 

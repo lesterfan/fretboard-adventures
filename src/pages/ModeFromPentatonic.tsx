@@ -1,15 +1,5 @@
 import React, { useState } from "react";
-import {
-  Checkbox,
-  FormControl,
-  InputLabel,
-  ListItemText,
-  MenuItem,
-  OutlinedInput,
-  Select,
-  SelectChangeEvent,
-  Typography,
-} from "@mui/material";
+import { Typography } from "@mui/material";
 import {
   generateModeFromPentatonicRound,
   ModeFromPentatonicRound,
@@ -18,30 +8,21 @@ import {
   DEGREE_COLORS,
   SECONDARY_DEGREE_COLORS,
   PENTATONIC_DEGREE_LABELS,
-  ALL_MODES,
-  ModeName,
 } from "../library/Library";
 import AnswerButtonList from "../components/AnswerButtonList";
 import FretboardDiagram, { FretboardMarker } from "../components/FretboardDiagram";
+import { useGlobalSettings } from "../GlobalSettingsContext";
 
 const NUM_FRETS_TO_SHOW = 5;
 const GRAY = "#9e9e9e";
 const ROOT_COLOR = DEGREE_COLORS[1];
 
-const DEFAULT_MODES: ModeName[] = ["ionian", "dorian", "aeolian"];
-
 const ModeFromPentatonic: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
-  const [enabledModes, setEnabledModes] = useState<ModeName[]>(DEFAULT_MODES);
+  const { enabledModes } = useGlobalSettings();
   const [round, setRound] = useState<ModeFromPentatonicRound>(() =>
-    generateModeFromPentatonicRound(NUM_FRETS_TO_SHOW, DEFAULT_MODES)
+    generateModeFromPentatonicRound(NUM_FRETS_TO_SHOW, enabledModes)
   );
   const [showAnswer, setShowAnswer] = useState(false);
-
-  const handleModeChange = (event: SelectChangeEvent<ModeName[]>) => {
-    const value = event.target.value as ModeName[];
-    if (value.length === 0) return;
-    setEnabledModes(value);
-  };
 
   const handleNext = () => {
     setRound(generateModeFromPentatonicRound(NUM_FRETS_TO_SHOW, enabledModes));
@@ -99,24 +80,6 @@ const ModeFromPentatonic: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
         onShowAnswer={() => setShowAnswer(true)}
         onNext={handleNext}
       />
-      <FormControl sx={{ ml: "15px", mt: 3, width: 365, maxWidth: "100%" }} size="small">
-        <InputLabel id="mode-select-label">Available Modes</InputLabel>
-        <Select
-          labelId="mode-select-label"
-          multiple
-          value={enabledModes}
-          onChange={handleModeChange}
-          input={<OutlinedInput label="Available Modes" />}
-          renderValue={(selected) => selected.map((m) => MODE_DISPLAY_NAMES[m]).join(", ")}
-        >
-          {ALL_MODES.map((mode) => (
-            <MenuItem key={mode} value={mode}>
-              <Checkbox checked={enabledModes.includes(mode)} />
-              <ListItemText primary={MODE_DISPLAY_NAMES[mode]} />
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
     </>
   );
 };

@@ -6,7 +6,6 @@ import {
   SEVENTH_ARPEGGIO_DEGREE_LABELS,
   SEVENTH_ARPEGGIO_DISPLAY_NAMES,
   DEGREE_COLORS,
-  articleForNote,
 } from "../library/Library";
 import AnswerButtonList from "../components/AnswerButtonList";
 import FretboardDiagram, { FretboardMarker } from "../components/FretboardDiagram";
