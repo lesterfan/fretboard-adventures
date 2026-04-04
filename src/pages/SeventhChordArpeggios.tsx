@@ -12,17 +12,11 @@ import FretboardDiagram, { FretboardMarker } from "../components/FretboardDiagra
 
 const NUM_FRETS_TO_SHOW = 5;
 
-const SeventhChordArpeggios: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
-  const [round, setRound] = useState<SeventhArpeggioRound>(() =>
+const SeventhChordArpeggios: React.FC = () => {
+  const [round] = useState<SeventhArpeggioRound>(() =>
     generateSeventhArpeggioRound(NUM_FRETS_TO_SHOW)
   );
   const [showAnswer, setShowAnswer] = useState(false);
-
-  const handleNext = () => {
-    setRound(generateSeventhArpeggioRound(NUM_FRETS_TO_SHOW));
-    setShowAnswer(false);
-    onNext?.();
-  };
 
   const { rootNote, arpeggioType, positions, strings, startFret } = round;
   const degreeLabels = SEVENTH_ARPEGGIO_DEGREE_LABELS[arpeggioType];
@@ -51,11 +45,7 @@ const SeventhChordArpeggios: React.FC<{ onNext?: () => void }> = ({ onNext }) =>
         numFretsToShow={NUM_FRETS_TO_SHOW}
         highlightedStrings={[...strings]}
       />
-      <AnswerButtonList
-        showingAnswer={showAnswer}
-        onShowAnswer={() => setShowAnswer(true)}
-        onNext={handleNext}
-      />
+      <AnswerButtonList showingAnswer={showAnswer} onShowAnswer={() => setShowAnswer(true)} />
     </>
   );
 };

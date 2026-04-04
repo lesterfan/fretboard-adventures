@@ -12,15 +12,9 @@ import FretboardDiagram, { FretboardMarker } from "../components/FretboardDiagra
 
 const NUM_FRETS_TO_SHOW = 5;
 
-const TriadInversions: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
-  const [round, setRound] = useState<TriadRound>(() => generateTriadRound(NUM_FRETS_TO_SHOW));
+const TriadInversions: React.FC = () => {
+  const [round] = useState<TriadRound>(() => generateTriadRound(NUM_FRETS_TO_SHOW));
   const [showAnswer, setShowAnswer] = useState(false);
-
-  const handleNext = () => {
-    setRound(generateTriadRound(NUM_FRETS_TO_SHOW));
-    setShowAnswer(false);
-    onNext?.();
-  };
 
   const { rootNote, triadType, positions, strings, startFret } = round;
 
@@ -48,11 +42,7 @@ const TriadInversions: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
         numFretsToShow={NUM_FRETS_TO_SHOW}
         highlightedStrings={[...strings]}
       />
-      <AnswerButtonList
-        showingAnswer={showAnswer}
-        onShowAnswer={() => setShowAnswer(true)}
-        onNext={handleNext}
-      />
+      <AnswerButtonList showingAnswer={showAnswer} onShowAnswer={() => setShowAnswer(true)} />
     </>
   );
 };

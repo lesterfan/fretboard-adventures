@@ -17,18 +17,12 @@ const NUM_FRETS_TO_SHOW = 5;
 const GRAY = "#9e9e9e";
 const ROOT_COLOR = DEGREE_COLORS[1];
 
-const ModeFromPentatonic: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
+const ModeFromPentatonic: React.FC = () => {
   const { enabledModes } = useGlobalSettings();
-  const [round, setRound] = useState<ModeFromPentatonicRound>(() =>
+  const [round] = useState<ModeFromPentatonicRound>(() =>
     generateModeFromPentatonicRound(NUM_FRETS_TO_SHOW, enabledModes)
   );
   const [showAnswer, setShowAnswer] = useState(false);
-
-  const handleNext = () => {
-    setRound(generateModeFromPentatonicRound(NUM_FRETS_TO_SHOW, enabledModes));
-    setShowAnswer(false);
-    onNext?.();
-  };
 
   const { rootNote, pentatonicType, modeName, pentatonicPositions, extraPositions, startFret } =
     round;
@@ -75,11 +69,7 @@ const ModeFromPentatonic: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
         numFretsToShow={NUM_FRETS_TO_SHOW}
         highlightedStrings={[]}
       />
-      <AnswerButtonList
-        showingAnswer={showAnswer}
-        onShowAnswer={() => setShowAnswer(true)}
-        onNext={handleNext}
-      />
+      <AnswerButtonList showingAnswer={showAnswer} onShowAnswer={() => setShowAnswer(true)} />
     </>
   );
 };

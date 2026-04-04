@@ -48,7 +48,11 @@ Guitar string numbering: string 1 = high E, string 6 = low E. Vite base path:
 
 ## Key conventions
 
-- Each question page takes `{ onNext?: () => void }` prop for use in AllQuestionsCombined
+- Question pages are simple components (no navigation props). All routes wrap them in
+  `QuestionPageHost`, which keeps up to 10 past instances mounted (hidden via `display: none`) for
+  back/forward navigation. History state lives in `QuestionHistoryContext`; pure reducer logic in
+  `questionHistory.ts` (tested independently)
+- `AnswerButtonList` consumes the history context directly for back/next — no prop threading needed
 - `FretboardDiagram` is the shared SVG component — supports markers, highlighted strings, fret
   ranges
 - Music theory logic lives in `Library.ts` with tests in `Library.test.ts`

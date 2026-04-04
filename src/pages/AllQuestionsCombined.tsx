@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback } from "react";
 import _ from "lodash";
 import FretboardRecognition from "./FretboardRecognition";
 import NoteOnAString from "./NoteOnAString";
@@ -8,6 +8,7 @@ import PentatonicScalePositions from "./PentatonicScalePositions";
 import PentatonicDegreeIdentification from "./PentatonicDegreeIdentification";
 import ModeFromPentatonic from "./ModeFromPentatonic";
 import SeventhChordArpeggios from "./SeventhChordArpeggios";
+import QuestionPageHost from "../components/QuestionPageHost";
 
 // NB: Add new question pages to this list when adding new questions
 const AllQuestionPages = [
@@ -21,21 +22,12 @@ const AllQuestionPages = [
   SeventhChordArpeggios,
 ];
 
-const getRandomQuestionIndex = () => {
-  return _.random(0, AllQuestionPages.length - 1);
-};
-
 const AllQuestionsCombined: React.FC = () => {
-  const [round, setRound] = useState(0);
-  const [currPageIndex, setCurrPageIndex] = useState<number>(() => getRandomQuestionIndex());
+  const getNextComponent = useCallback(() => {
+    return AllQuestionPages[_.random(0, AllQuestionPages.length - 1)];
+  }, []);
 
-  const handleNext = () => {
-    setCurrPageIndex(getRandomQuestionIndex());
-    setRound((r) => r + 1);
-  };
-
-  const CurrentQuestion = AllQuestionPages[currPageIndex];
-  return <CurrentQuestion key={round} onNext={handleNext} />;
+  return <QuestionPageHost getNextComponent={getNextComponent} />;
 };
 
 export default AllQuestionsCombined;

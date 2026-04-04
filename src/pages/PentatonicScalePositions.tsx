@@ -11,17 +11,9 @@ import FretboardDiagram, { FretboardMarker } from "../components/FretboardDiagra
 
 const NUM_FRETS_TO_SHOW = 5;
 
-const PentatonicScalePositions: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
-  const [round, setRound] = useState<PentatonicRound>(() =>
-    generatePentatonicRound(NUM_FRETS_TO_SHOW)
-  );
+const PentatonicScalePositions: React.FC = () => {
+  const [round] = useState<PentatonicRound>(() => generatePentatonicRound(NUM_FRETS_TO_SHOW));
   const [showAnswer, setShowAnswer] = useState(false);
-
-  const handleNext = () => {
-    setRound(generatePentatonicRound(NUM_FRETS_TO_SHOW));
-    setShowAnswer(false);
-    onNext?.();
-  };
 
   const { rootNote, pentatonicType, positions, startFret } = round;
 
@@ -49,11 +41,7 @@ const PentatonicScalePositions: React.FC<{ onNext?: () => void }> = ({ onNext })
         numFretsToShow={NUM_FRETS_TO_SHOW}
         highlightedStrings={[]}
       />
-      <AnswerButtonList
-        showingAnswer={showAnswer}
-        onShowAnswer={() => setShowAnswer(true)}
-        onNext={handleNext}
-      />
+      <AnswerButtonList showingAnswer={showAnswer} onShowAnswer={() => setShowAnswer(true)} />
     </>
   );
 };

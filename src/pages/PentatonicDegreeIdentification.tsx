@@ -13,17 +13,9 @@ const NUM_FRETS_TO_SHOW = 5;
 const GRAY = "#9e9e9e";
 const ROOT_COLOR = DEGREE_COLORS[1];
 
-const PentatonicDegreeIdentification: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
-  const [round, setRound] = useState<PentatonicRound>(() =>
-    generatePentatonicRound(NUM_FRETS_TO_SHOW)
-  );
+const PentatonicDegreeIdentification: React.FC = () => {
+  const [round] = useState<PentatonicRound>(() => generatePentatonicRound(NUM_FRETS_TO_SHOW));
   const [showAnswer, setShowAnswer] = useState(false);
-
-  const handleNext = () => {
-    setRound(generatePentatonicRound(NUM_FRETS_TO_SHOW));
-    setShowAnswer(false);
-    onNext?.();
-  };
 
   const { rootNote, pentatonicType, positions, startFret } = round;
   const degreeLabels = PENTATONIC_DEGREE_LABELS[pentatonicType];
@@ -58,11 +50,7 @@ const PentatonicDegreeIdentification: React.FC<{ onNext?: () => void }> = ({ onN
         numFretsToShow={NUM_FRETS_TO_SHOW}
         highlightedStrings={[]}
       />
-      <AnswerButtonList
-        showingAnswer={showAnswer}
-        onShowAnswer={() => setShowAnswer(true)}
-        onNext={handleNext}
-      />
+      <AnswerButtonList showingAnswer={showAnswer} onShowAnswer={() => setShowAnswer(true)} />
     </>
   );
 };

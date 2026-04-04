@@ -19,17 +19,9 @@ const CHORD_TYPE_LABEL: Record<string, string> = {
   m7b5: "m7b5 (half diminished)",
 };
 
-const SeventhChordInversions: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
-  const [round, setRound] = useState<SeventhChordRound>(() =>
-    generateSeventhChordRound(NUM_FRETS_TO_SHOW)
-  );
+const SeventhChordInversions: React.FC = () => {
+  const [round] = useState<SeventhChordRound>(() => generateSeventhChordRound(NUM_FRETS_TO_SHOW));
   const [showAnswer, setShowAnswer] = useState(false);
-
-  const handleNext = () => {
-    setRound(generateSeventhChordRound(NUM_FRETS_TO_SHOW));
-    setShowAnswer(false);
-    onNext?.();
-  };
 
   const { rootNote, chordType, positions, strings, startFret } = round;
 
@@ -57,11 +49,7 @@ const SeventhChordInversions: React.FC<{ onNext?: () => void }> = ({ onNext }) =
         numFretsToShow={NUM_FRETS_TO_SHOW}
         highlightedStrings={[...strings]}
       />
-      <AnswerButtonList
-        showingAnswer={showAnswer}
-        onShowAnswer={() => setShowAnswer(true)}
-        onNext={handleNext}
-      />
+      <AnswerButtonList showingAnswer={showAnswer} onShowAnswer={() => setShowAnswer(true)} />
     </>
   );
 };

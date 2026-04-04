@@ -29,15 +29,9 @@ const generateRound = (): RoundParams => {
   return { noteName, startFret, string };
 };
 
-const NoteOnAString: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
-  const [round, setRound] = useState<RoundParams>(generateRound);
+const NoteOnAString: React.FC = () => {
+  const [round] = useState<RoundParams>(generateRound);
   const [showAnswer, setShowAnswer] = useState(false);
-
-  const handleNext = () => {
-    setRound(generateRound());
-    setShowAnswer(false);
-    onNext?.();
-  };
 
   const { noteName, startFret, string } = round;
   const endFret = startFret + NUM_FRETS_TO_SHOW - 1;
@@ -59,11 +53,7 @@ const NoteOnAString: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
         numFretsToShow={NUM_FRETS_TO_SHOW}
         highlightedStrings={[string]}
       />
-      <AnswerButtonList
-        showingAnswer={showAnswer}
-        onShowAnswer={() => setShowAnswer(true)}
-        onNext={handleNext}
-      />
+      <AnswerButtonList showingAnswer={showAnswer} onShowAnswer={() => setShowAnswer(true)} />
     </>
   );
 };

@@ -15,17 +15,10 @@ const computeStartFret = (fretNum: number): number => {
   return start;
 };
 
-const FretboardRecognition: React.FC<{ onNext?: () => void }> = ({ onNext }) => {
-  const [stringNum, setStringNum] = useState<number>(() => _.random(1, 6));
-  const [fretNum, setFretNum] = useState<number>(() => _.random(1, 12));
+const FretboardRecognition: React.FC = () => {
+  const [stringNum] = useState<number>(() => _.random(1, 6));
+  const [fretNum] = useState<number>(() => _.random(1, 12));
   const [showAnswer, setShowAnswer] = useState(false);
-
-  const handleNext = () => {
-    setStringNum(_.random(1, 6));
-    setFretNum(_.random(1, 12));
-    setShowAnswer(false);
-    onNext?.();
-  };
 
   const answer = getGuitarNoteName(stringNum, fretNum);
 
@@ -39,11 +32,7 @@ const FretboardRecognition: React.FC<{ onNext?: () => void }> = ({ onNext }) => 
         startFret={computeStartFret(fretNum)}
         numFretsToShow={NUM_FRETS_TO_SHOW}
       />
-      <AnswerButtonList
-        showingAnswer={showAnswer}
-        onShowAnswer={() => setShowAnswer(true)}
-        onNext={handleNext}
-      />
+      <AnswerButtonList showingAnswer={showAnswer} onShowAnswer={() => setShowAnswer(true)} />
     </>
   );
 };

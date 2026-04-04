@@ -12,6 +12,7 @@ import SeventhChordArpeggios from "./pages/SeventhChordArpeggios";
 import { Sidebar } from "./components/Sidebar";
 import AllQuestionsCombined from "./pages/AllQuestionsCombined";
 import { GlobalSettingsProvider } from "./GlobalSettingsContext";
+import QuestionPageHost from "./components/QuestionPageHost";
 
 const theme = createTheme({
   palette: {
@@ -78,14 +79,40 @@ const App: React.FC = () => {
           >
             <Routes>
               <Route path="/" element={<AllQuestionsCombined />} />
-              <Route path="/fretboard_recognition" element={<FretboardRecognition />} />
-              <Route path="/note_on_a_string" element={<NoteOnAString />} />
-              <Route path="/triad_inversions" element={<TriadInversions />} />
-              <Route path="/seventh_chord_inversions" element={<SeventhChordInversions />} />
-              <Route path="/pentatonic" element={<PentatonicScalePositions />} />
-              <Route path="/pentatonic_degrees" element={<PentatonicDegreeIdentification />} />
-              <Route path="/mode_from_pentatonic" element={<ModeFromPentatonic />} />
-              <Route path="/seventh_chord_arpeggios" element={<SeventhChordArpeggios />} />
+              <Route
+                path="/fretboard_recognition"
+                element={<QuestionPageHost getNextComponent={() => FretboardRecognition} />}
+              />
+              <Route
+                path="/note_on_a_string"
+                element={<QuestionPageHost getNextComponent={() => NoteOnAString} />}
+              />
+              <Route
+                path="/triad_inversions"
+                element={<QuestionPageHost getNextComponent={() => TriadInversions} />}
+              />
+              <Route
+                path="/seventh_chord_inversions"
+                element={<QuestionPageHost getNextComponent={() => SeventhChordInversions} />}
+              />
+              <Route
+                path="/pentatonic"
+                element={<QuestionPageHost getNextComponent={() => PentatonicScalePositions} />}
+              />
+              <Route
+                path="/pentatonic_degrees"
+                element={
+                  <QuestionPageHost getNextComponent={() => PentatonicDegreeIdentification} />
+                }
+              />
+              <Route
+                path="/mode_from_pentatonic"
+                element={<QuestionPageHost getNextComponent={() => ModeFromPentatonic} />}
+              />
+              <Route
+                path="/seventh_chord_arpeggios"
+                element={<QuestionPageHost getNextComponent={() => SeventhChordArpeggios} />}
+              />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Box>
