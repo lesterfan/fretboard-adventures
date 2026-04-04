@@ -170,7 +170,7 @@ export function generateTriadRound(numFretsToShow: number): TriadRound {
 
 // --- Seventh Chord Logic ---
 
-export type SeventhChordType = "dominant7" | "minor7" | "major7";
+export type SeventhChordType = "dominant7" | "minor7" | "major7" | "m7b5";
 export type SeventhChordInversion = "root" | "first" | "second" | "third";
 
 export interface SeventhChordPosition {
@@ -193,12 +193,14 @@ const SEVENTH_CHORD_SEMITONES: Record<SeventhChordType, [number, number, number,
   dominant7: [0, 4, 7, 10],
   minor7: [0, 3, 7, 10],
   major7: [0, 4, 7, 11],
+  m7b5: [0, 3, 6, 10],
 };
 
 export const SEVENTH_DEGREE_LABELS: Record<SeventhChordType, Record<number, string>> = {
   dominant7: { 1: "1", 3: "3", 5: "5", 7: "b7" },
   minor7: { 1: "1", 3: "b3", 5: "5", 7: "b7" },
   major7: { 1: "1", 3: "3", 5: "5", 7: "7" },
+  m7b5: { 1: "1", 3: "b3", 5: "b5", 7: "b7" },
 };
 
 const SEVENTH_INVERSION_DEGREES: Record<SeventhChordInversion, [number, number, number, number]> = {
@@ -209,7 +211,7 @@ const SEVENTH_INVERSION_DEGREES: Record<SeventhChordInversion, [number, number, 
 };
 
 const SEVENTH_CHORD_STRINGS: [number, number, number, number] = [6, 4, 3, 2];
-const SEVENTH_CHORD_TYPES: SeventhChordType[] = ["dominant7", "minor7", "major7"];
+const SEVENTH_CHORD_TYPES: SeventhChordType[] = ["dominant7", "minor7", "major7", "m7b5"];
 const SEVENTH_INVERSIONS: SeventhChordInversion[] = ["root", "first", "second", "third"];
 
 export function getSeventhChordNotes(

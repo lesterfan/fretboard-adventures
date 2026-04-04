@@ -16,6 +16,7 @@ const CHORD_TYPE_LABEL: Record<string, string> = {
   dominant7: "dominant 7",
   minor7: "minor 7",
   major7: "major 7",
+  m7b5: "m7b5 (half diminished)",
 };
 
 const SeventhChordInversions: React.FC<{ onNext?: () => void }> = ({ onNext }) => {

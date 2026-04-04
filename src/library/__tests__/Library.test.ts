@@ -165,6 +165,10 @@ describe("getSeventhChordNotes", () => {
     expect(getSeventhChordNotes("F", "major7")).toEqual(["F", "A", "C", "E"]);
   });
 
+  test("should return correct notes for B m7b5", () => {
+    expect(getSeventhChordNotes("B", "m7b5")).toEqual(["B", "D", "F", "A"]);
+  });
+
   test("should throw for invalid root note", () => {
     expect(() => getSeventhChordNotes("X", "dominant7")).toThrow("Invalid root note");
   });
