@@ -1,6 +1,6 @@
 # Fretboard Adventures
 
-Some interactive flash-card style games for learning guitar.
+Guitar fretboard trainer with interactive drills.
 
 ## Some useful dev commands
 
