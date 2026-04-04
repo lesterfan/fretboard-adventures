@@ -475,8 +475,15 @@ export const MODE_EXTRA_DEGREE_LABELS: Record<ModeName, Record<number, string>> 
 };
 
 export const MINOR_MODES: ModeName[] = ["dorian", "aeolian", "phrygian"];
-export const MAJOR_MODES: ModeName[] = ["ionian", "mixolydian", "lydian"];
-export const ALL_MODES: ModeName[] = [...MINOR_MODES, ...MAJOR_MODES];
+export const MAJOR_MODES: ModeName[] = ["lydian", "ionian", "mixolydian"];
+export const ALL_MODES: ModeName[] = [
+  "lydian",
+  "ionian",
+  "mixolydian",
+  "dorian",
+  "aeolian",
+  "phrygian",
+];
 
 export const MODE_DISPLAY_NAMES: Record<ModeName, string> = {
   dorian: "Dorian",
