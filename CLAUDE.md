@@ -40,6 +40,9 @@ Guitar string numbering: string 1 = high E, string 6 = low E. Vite base path:
   strings
 - **Pentatonic Degree Identification** — given a visible pentatonic box, identify all notes of a
   specific scale degree
+- **Mode from Pentatonic** — given a pentatonic box, find the remaining notes to complete a mode
+  (Dorian/Aeolian/Phrygian for minor, Ionian/Mixolydian/Lydian for major); user-configurable mode
+  selector defaults to Ionian, Dorian, Aeolian
 
 ## Key conventions
 

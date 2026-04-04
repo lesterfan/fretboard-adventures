@@ -72,6 +72,13 @@ export const DEGREE_COLORS: Record<number, string> = {
   7: "#795548", // brown — seventh
 };
 
+export const SECONDARY_DEGREE_COLORS: Record<number, string> = {
+  2: "#e65100", // orange — second
+  4: "#c62828", // red — fourth
+  6: "#00838f", // teal — sixth
+  7: "#6a1b9a", // deep purple — seventh
+};
+
 export const TRIAD_DEGREE_LABELS: Record<TriadType, Record<number, string>> = {
   major: { 1: "1", 3: "3", 5: "5" },
   minor: { 1: "1", 3: "b3", 5: "5" },
@@ -416,4 +423,154 @@ export function generatePentatonicRound(numFretsToShow: number): PentatonicRound
     );
   } while (positions === null);
   return { rootNote, pentatonicType, positions, startFret };
+}
+
+// --- Mode from Pentatonic Logic ---
+
+export type ModeName = "dorian" | "aeolian" | "phrygian" | "ionian" | "mixolydian" | "lydian";
+
+export interface ModeExtraPosition {
+  stringNum: number;
+  fretNum: number;
+  degree: number;
+  noteName: string;
+}
+
+export interface ModeFromPentatonicRound {
+  rootNote: string;
+  pentatonicType: PentatonicType;
+  modeName: ModeName;
+  pentatonicPositions: PentatonicPosition[];
+  extraPositions: ModeExtraPosition[];
+  startFret: number;
+}
+
+const MODE_EXTRA_SEMITONES: Record<ModeName, number[]> = {
+  dorian: [2, 9],
+  aeolian: [2, 8],
+  phrygian: [1, 8],
+  ionian: [5, 11],
+  mixolydian: [5, 10],
+  lydian: [6, 11],
+};
+
+const MODE_EXTRA_DEGREE_MAP: Record<ModeName, Record<number, number>> = {
+  dorian: { 2: 2, 9: 6 },
+  aeolian: { 2: 2, 8: 6 },
+  phrygian: { 1: 2, 8: 6 },
+  ionian: { 5: 4, 11: 7 },
+  mixolydian: { 5: 4, 10: 7 },
+  lydian: { 6: 4, 11: 7 },
+};
+
+export const MODE_EXTRA_DEGREE_LABELS: Record<ModeName, Record<number, string>> = {
+  dorian: { 2: "2", 6: "6" },
+  aeolian: { 2: "2", 6: "b6" },
+  phrygian: { 2: "b2", 6: "b6" },
+  ionian: { 4: "4", 7: "7" },
+  mixolydian: { 4: "4", 7: "b7" },
+  lydian: { 4: "#4", 7: "7" },
+};
+
+export const MINOR_MODES: ModeName[] = ["dorian", "aeolian", "phrygian"];
+export const MAJOR_MODES: ModeName[] = ["ionian", "mixolydian", "lydian"];
+export const ALL_MODES: ModeName[] = [...MINOR_MODES, ...MAJOR_MODES];
+
+export const MODE_DISPLAY_NAMES: Record<ModeName, string> = {
+  dorian: "Dorian",
+  aeolian: "Aeolian",
+  phrygian: "Phrygian",
+  ionian: "Ionian",
+  mixolydian: "Mixolydian",
+  lydian: "Lydian",
+};
+
+export const MODE_PENTATONIC_TYPE: Record<ModeName, PentatonicType> = {
+  dorian: "minor",
+  aeolian: "minor",
+  phrygian: "minor",
+  ionian: "major",
+  mixolydian: "major",
+  lydian: "major",
+};
+
+export function getExtraModeNotes(
+  rootNote: string,
+  modeName: ModeName
+): { noteName: string; degree: number }[] {
+  const noteNames = getMusicalNoteNames();
+  const rootIndex = noteNames.indexOf(rootNote);
+  if (rootIndex === -1) {
+    throw new Error(`Invalid root note: ${rootNote}`);
+  }
+  const semitones = MODE_EXTRA_SEMITONES[modeName];
+  const degreeMap = MODE_EXTRA_DEGREE_MAP[modeName];
+  return semitones.map((s) => ({
+    noteName: noteNames[(rootIndex + s) % 12],
+    degree: degreeMap[s],
+  }));
+}
+
+export function findExtraModePositions(
+  rootNote: string,
+  modeName: ModeName,
+  startFret: number,
+  endFret: number
+): ModeExtraPosition[] {
+  const extraNotes = getExtraModeNotes(rootNote, modeName);
+  const noteToDegreeLookup: Record<string, number> = {};
+  for (const { noteName, degree } of extraNotes) {
+    noteToDegreeLookup[noteName] = degree;
+  }
+
+  const positions: ModeExtraPosition[] = [];
+  for (const stringNum of ALL_STRINGS) {
+    for (let fretNum = startFret; fretNum <= endFret; fretNum++) {
+      const noteName = getGuitarNoteName(stringNum, fretNum);
+      if (noteName in noteToDegreeLookup) {
+        positions.push({
+          stringNum,
+          fretNum,
+          degree: noteToDegreeLookup[noteName],
+          noteName,
+        });
+      }
+    }
+  }
+  return positions;
+}
+
+export function generateModeFromPentatonicRound(
+  numFretsToShow: number,
+  enabledModes: ModeName[] = ALL_MODES
+): ModeFromPentatonicRound {
+  const minorModes = enabledModes.filter((m) => MODE_PENTATONIC_TYPE[m] === "minor");
+  const majorModes = enabledModes.filter((m) => MODE_PENTATONIC_TYPE[m] === "major");
+  if (minorModes.length === 0 && majorModes.length === 0) {
+    throw new Error("At least one mode must be enabled");
+  }
+
+  let pentatonicRound: PentatonicRound;
+  let modeName!: ModeName;
+  let extraPositions!: ModeExtraPosition[];
+  do {
+    pentatonicRound = generatePentatonicRound(numFretsToShow);
+    const modes = pentatonicRound.pentatonicType === "minor" ? minorModes : majorModes;
+    if (modes.length === 0) continue;
+    modeName = _.sample(modes) as ModeName;
+    extraPositions = findExtraModePositions(
+      pentatonicRound.rootNote,
+      modeName,
+      pentatonicRound.startFret,
+      pentatonicRound.startFret + numFretsToShow - 1
+    );
+  } while (!extraPositions || extraPositions.length === 0);
+  return {
+    rootNote: pentatonicRound.rootNote,
+    pentatonicType: pentatonicRound.pentatonicType,
+    modeName,
+    pentatonicPositions: pentatonicRound.positions,
+    extraPositions,
+    startFret: pentatonicRound.startFret,
+  };
 }

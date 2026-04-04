@@ -9,6 +9,9 @@ import {
   getPentatonicNotes,
   findPentatonicBoxPositions,
   generatePentatonicRound,
+  getExtraModeNotes,
+  findExtraModePositions,
+  generateModeFromPentatonicRound,
   SeventhChordInversion,
 } from "../Library";
 
@@ -317,5 +320,172 @@ describe("generatePentatonicRound", () => {
         expect(pos.fretNum).toBeLessThanOrEqual(round.startFret + 4);
       }
     }
+  });
+});
+
+describe("Mode from Pentatonic", () => {
+  describe("getExtraModeNotes", () => {
+    test("C Dorian extra notes are D (2nd) and A (6th)", () => {
+      const notes = getExtraModeNotes("C", "dorian");
+      expect(notes).toEqual([
+        { noteName: "D", degree: 2 },
+        { noteName: "A", degree: 6 },
+      ]);
+    });
+
+    test("C Aeolian extra notes are D (2nd) and G#/Ab (b6th)", () => {
+      const notes = getExtraModeNotes("C", "aeolian");
+      expect(notes).toEqual([
+        { noteName: "D", degree: 2 },
+        { noteName: "G#/Ab", degree: 6 },
+      ]);
+    });
+
+    test("C Ionian extra notes are F (4th) and B (7th)", () => {
+      const notes = getExtraModeNotes("C", "ionian");
+      expect(notes).toEqual([
+        { noteName: "F", degree: 4 },
+        { noteName: "B", degree: 7 },
+      ]);
+    });
+
+    test("C Mixolydian extra notes are F (4th) and A#/Bb (b7th)", () => {
+      const notes = getExtraModeNotes("C", "mixolydian");
+      expect(notes).toEqual([
+        { noteName: "F", degree: 4 },
+        { noteName: "A#/Bb", degree: 7 },
+      ]);
+    });
+
+    test("C Lydian extra notes are F#/Gb (#4th) and B (7th)", () => {
+      const notes = getExtraModeNotes("C", "lydian");
+      expect(notes).toEqual([
+        { noteName: "F#/Gb", degree: 4 },
+        { noteName: "B", degree: 7 },
+      ]);
+    });
+
+    test("C Phrygian extra notes are C#/Db (b2nd) and G#/Ab (b6th)", () => {
+      const notes = getExtraModeNotes("C", "phrygian");
+      expect(notes).toEqual([
+        { noteName: "C#/Db", degree: 2 },
+        { noteName: "G#/Ab", degree: 6 },
+      ]);
+    });
+
+    test("transposition works for non-C root (F#/Gb Dorian)", () => {
+      // F# Dorian extra: 2nd = G#/Ab, 6th = D#/Eb
+      const notes = getExtraModeNotes("F#/Gb", "dorian");
+      expect(notes).toEqual([
+        { noteName: "G#/Ab", degree: 2 },
+        { noteName: "D#/Eb", degree: 6 },
+      ]);
+    });
+
+    test("should throw for invalid root note", () => {
+      expect(() => getExtraModeNotes("X", "dorian")).toThrow("Invalid root note");
+    });
+  });
+
+  describe("findExtraModePositions", () => {
+    test("returns positions for extra mode notes within fret range", () => {
+      // C Dorian extra notes: D and A
+      const positions = findExtraModePositions("C", "dorian", 5, 9);
+      expect(positions.length).toBeGreaterThan(0);
+      for (const pos of positions) {
+        expect(pos.fretNum).toBeGreaterThanOrEqual(5);
+        expect(pos.fretNum).toBeLessThanOrEqual(9);
+        expect(["D", "A"]).toContain(pos.noteName);
+        expect(getGuitarNoteName(pos.stringNum, pos.fretNum)).toBe(pos.noteName);
+      }
+    });
+
+    test("assigns correct degrees to positions", () => {
+      // C Aeolian extra: D (degree 2) and G#/Ab (degree 6)
+      const positions = findExtraModePositions("C", "aeolian", 1, 5);
+      for (const pos of positions) {
+        if (pos.noteName === "D") {
+          expect(pos.degree).toBe(2);
+        } else if (pos.noteName === "G#/Ab") {
+          expect(pos.degree).toBe(6);
+        } else {
+          fail(`Unexpected note: ${pos.noteName}`);
+        }
+      }
+    });
+
+    test("finds positions across all 6 strings", () => {
+      // Wide fret range to ensure hits on every string
+      const positions = findExtraModePositions("A", "dorian", 1, 12);
+      const strings = new Set(positions.map((p) => p.stringNum));
+      expect(strings.size).toBe(6);
+    });
+  });
+
+  describe("generateModeFromPentatonicRound", () => {
+    test("returns a valid round with all required fields", () => {
+      const round = generateModeFromPentatonicRound(5);
+      expect(round.rootNote).toBeDefined();
+      expect(round.pentatonicType).toMatch(/^(minor|major)$/);
+      expect(round.modeName).toBeDefined();
+      expect(round.pentatonicPositions.length).toBe(12);
+      expect(round.extraPositions.length).toBeGreaterThan(0);
+      expect(round.startFret).toBeGreaterThanOrEqual(1);
+    });
+
+    test("mode is compatible with pentatonic type", () => {
+      for (let i = 0; i < 30; i++) {
+        const round = generateModeFromPentatonicRound(5);
+        if (round.pentatonicType === "minor") {
+          expect(["dorian", "aeolian", "phrygian"]).toContain(round.modeName);
+        } else {
+          expect(["ionian", "mixolydian", "lydian"]).toContain(round.modeName);
+        }
+      }
+    });
+
+    test("respects enabledModes filter", () => {
+      for (let i = 0; i < 20; i++) {
+        const round = generateModeFromPentatonicRound(5, ["ionian", "dorian"]);
+        expect(["ionian", "dorian"]).toContain(round.modeName);
+      }
+    });
+
+    test("works with only minor modes enabled", () => {
+      for (let i = 0; i < 10; i++) {
+        const round = generateModeFromPentatonicRound(5, ["aeolian"]);
+        expect(round.modeName).toBe("aeolian");
+        expect(round.pentatonicType).toBe("minor");
+      }
+    });
+
+    test("works with only major modes enabled", () => {
+      for (let i = 0; i < 10; i++) {
+        const round = generateModeFromPentatonicRound(5, ["ionian"]);
+        expect(round.modeName).toBe("ionian");
+        expect(round.pentatonicType).toBe("major");
+      }
+    });
+
+    test("extra positions fall within the fret window", () => {
+      for (let i = 0; i < 20; i++) {
+        const round = generateModeFromPentatonicRound(5);
+        const endFret = round.startFret + 4;
+        for (const pos of round.extraPositions) {
+          expect(pos.fretNum).toBeGreaterThanOrEqual(round.startFret);
+          expect(pos.fretNum).toBeLessThanOrEqual(endFret);
+        }
+      }
+    });
+
+    test("extra position notes are not in the pentatonic scale", () => {
+      for (let i = 0; i < 20; i++) {
+        const round = generateModeFromPentatonicRound(5);
+        const pentatonicNoteNames = new Set(round.pentatonicPositions.map((p) => p.noteName));
+        for (const pos of round.extraPositions) {
+          expect(pentatonicNoteNames).not.toContain(pos.noteName);
+        }
+      }
+    });
   });
 });

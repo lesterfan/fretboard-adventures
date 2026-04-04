@@ -6,6 +6,7 @@ import TriadInversions from "./TriadInversions";
 import SeventhChordInversions from "./SeventhChordInversions";
 import PentatonicScalePositions from "./PentatonicScalePositions";
 import PentatonicDegreeIdentification from "./PentatonicDegreeIdentification";
+import ModeFromPentatonic from "./ModeFromPentatonic";
 
 // NB: Add new question pages to this list when adding new questions
 const AllQuestionPages = [
@@ -15,6 +16,7 @@ const AllQuestionPages = [
   SeventhChordInversions,
   PentatonicScalePositions,
   PentatonicDegreeIdentification,
+  ModeFromPentatonic,
 ];
 
 const getRandomQuestionIndex = () => {

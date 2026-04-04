@@ -7,6 +7,7 @@ import TriadInversions from "./pages/TriadInversions";
 import SeventhChordInversions from "./pages/SeventhChordInversions";
 import PentatonicScalePositions from "./pages/PentatonicScalePositions";
 import PentatonicDegreeIdentification from "./pages/PentatonicDegreeIdentification";
+import ModeFromPentatonic from "./pages/ModeFromPentatonic";
 import { Sidebar } from "./components/Sidebar";
 import AllQuestionsCombined from "./pages/AllQuestionsCombined";
 
@@ -53,6 +54,7 @@ const App: React.FC = () => {
     { path: "/seventh_chord_inversions", name: "Seventh Chord Inversions" },
     { path: "/pentatonic", name: "Pentatonic Scale Positions" },
     { path: "/pentatonic_degrees", name: "Pentatonic Degrees" },
+    { path: "/mode_from_pentatonic", name: "Mode from Pentatonic" },
   ];
 
   return (
@@ -78,6 +80,7 @@ const App: React.FC = () => {
             <Route path="/seventh_chord_inversions" element={<SeventhChordInversions />} />
             <Route path="/pentatonic" element={<PentatonicScalePositions />} />
             <Route path="/pentatonic_degrees" element={<PentatonicDegreeIdentification />} />
+            <Route path="/mode_from_pentatonic" element={<ModeFromPentatonic />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Box>
