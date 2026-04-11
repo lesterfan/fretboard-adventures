@@ -52,7 +52,9 @@ export function parseSettings(raw: string | null): GlobalSettingsState {
       (q): q is QuestionTypeId => typeof q === "string" && validQuestionTypeSet.has(q)
     );
     if (valid.length > 0) {
-      enabledQuestionTypes = valid;
+      const storedSet = new Set(valid);
+      const newTypes = ALL_QUESTION_TYPES.filter((q) => !storedSet.has(q));
+      enabledQuestionTypes = [...valid, ...newTypes];
     }
   }
 
