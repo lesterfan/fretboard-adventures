@@ -46,6 +46,13 @@ Guitar string numbering: string 1 = high E, string 6 = low E. Vite base path:
 - **Seventh Chord Arpeggios** — find all notes of a seventh chord arpeggio (dominant 7/minor
   7/major 7/m7b5) on 2 adjacent highlighted strings within a 5-fret window
 
+## Settings persistence
+
+Global settings are persisted to `localStorage` under a single `"globalSettings"` key.
+`settingsPersistence.ts` contains the load/save logic with per-field validation: invalid or missing
+fields fall back to defaults, so adding a new setting just means extending `GlobalSettingsState`,
+`DEFAULTS`, and a validation block. `GlobalSettingsContext.tsx` wires this into React state.
+
 ## Key conventions
 
 - Question pages are simple components (no navigation props). All routes wrap them in
