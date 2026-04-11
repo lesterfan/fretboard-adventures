@@ -563,7 +563,7 @@ export interface SeventhArpeggioPosition {
 export interface SeventhArpeggioRound {
   rootNote: string;
   arpeggioType: SeventhArpeggioType;
-  strings: [number, number, number];
+  strings: [number, number];
   startFret: number;
   positions: SeventhArpeggioPosition[];
 }
@@ -621,7 +621,7 @@ export function getSeventhArpeggioNotes(
 export function findSeventhArpeggioPositions(
   rootNote: string,
   type: SeventhArpeggioType,
-  strings: [number, number, number],
+  strings: [number, number],
   startFret: number,
   endFret: number
 ): SeventhArpeggioPosition[] | null {
@@ -653,17 +653,25 @@ export function findSeventhArpeggioPositions(
   return positions;
 }
 
+const ADJACENT_STRING_PAIRS: [number, number][] = [
+  [6, 5],
+  [5, 4],
+  [4, 3],
+  [3, 2],
+  [2, 1],
+];
+
 export function generateSeventhArpeggioRound(numFretsToShow: number): SeventhArpeggioRound {
   const maxStartFret = 12 - numFretsToShow + 1;
   let rootNote: string;
   let arpeggioType: SeventhArpeggioType;
-  let strings: [number, number, number];
+  let strings: [number, number];
   let startFret: number;
   let positions: SeventhArpeggioPosition[] | null;
   do {
     rootNote = getRandomMuscialNoteName();
     arpeggioType = _.sample(SEVENTH_ARPEGGIO_TYPES) as SeventhArpeggioType;
-    strings = _.sample(ADJACENT_STRING_GROUPS) as [number, number, number];
+    strings = _.sample(ADJACENT_STRING_PAIRS) as [number, number];
     startFret = _.random(1, maxStartFret);
     positions = findSeventhArpeggioPositions(
       rootNote,

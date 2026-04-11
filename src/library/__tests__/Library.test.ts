@@ -536,21 +536,21 @@ describe("Seventh Chord Arpeggios", () => {
   });
 
   describe("findSeventhArpeggioPositions", () => {
-    test("should return all arpeggio-tone positions on 3 strings within fret range", () => {
-      // A minor 7: A, C, E, G on strings [6,5,4], frets 1-5
-      const result = findSeventhArpeggioPositions("A", "minor7", [6, 5, 4], 1, 5);
+    test("should return all arpeggio-tone positions on 2 strings within fret range", () => {
+      // A minor 7: A, C, E, G on strings [5,4], frets 3-8
+      const result = findSeventhArpeggioPositions("A", "minor7", [5, 4], 3, 8);
       expect(result).not.toBeNull();
       for (const pos of result!) {
-        expect(pos.fretNum).toBeGreaterThanOrEqual(1);
-        expect(pos.fretNum).toBeLessThanOrEqual(5);
-        expect([6, 5, 4]).toContain(pos.stringNum);
+        expect(pos.fretNum).toBeGreaterThanOrEqual(3);
+        expect(pos.fretNum).toBeLessThanOrEqual(8);
+        expect([5, 4]).toContain(pos.stringNum);
         expect(getGuitarNoteName(pos.stringNum, pos.fretNum)).toBe(pos.noteName);
       }
     });
 
     test("should return null when a degree is missing from the window", () => {
       // Very narrow range where not all 4 notes can appear
-      const result = findSeventhArpeggioPositions("C", "dominant7", [3, 2, 1], 1, 2);
+      const result = findSeventhArpeggioPositions("C", "dominant7", [2, 1], 1, 2);
       // If this happens to find all 4, try an even narrower case
       if (result !== null) {
         // At minimum, verify that all 4 degrees are present when not null
@@ -561,7 +561,7 @@ describe("Seventh Chord Arpeggios", () => {
 
     test("should assign correct degrees to positions", () => {
       // C dominant 7: C=1, E=3, G=5, A#/Bb=7
-      const result = findSeventhArpeggioPositions("C", "dominant7", [6, 5, 4], 1, 5);
+      const result = findSeventhArpeggioPositions("C", "dominant7", [6, 5], 1, 5);
       if (result !== null) {
         for (const pos of result) {
           if (pos.noteName === "C") expect(pos.degree).toBe(1);
@@ -573,8 +573,8 @@ describe("Seventh Chord Arpeggios", () => {
     });
 
     test("should handle m7b5 chord type", () => {
-      // B m7b5: B, D, F, A on strings [5,4,3], frets 1-5
-      const result = findSeventhArpeggioPositions("B", "m7b5", [5, 4, 3], 1, 5);
+      // B m7b5: B, D, F, A on strings [5,4], frets 1-5
+      const result = findSeventhArpeggioPositions("B", "m7b5", [5, 4], 1, 5);
       if (result !== null) {
         const degrees = new Set(result.map((p) => p.degree));
         expect(degrees.size).toBe(4);
@@ -587,9 +587,9 @@ describe("Seventh Chord Arpeggios", () => {
     test("a string can have multiple arpeggio notes", () => {
       // A minor 7 (A, C, E, G) on strings [6,5,4], frets 1-5:
       // String 6 (E): E at fret 0 (not in range), A at fret 5, no others in 1-5? Let's check wider
-      // Use frets 2-7 on strings [4,3,2] for A minor 7
+      // Use frets 2-7 on strings [4,3] for A minor 7
       // String 4 (D): E at fret 2, G at fret 5 — two notes on one string
-      const result = findSeventhArpeggioPositions("A", "minor7", [4, 3, 2], 2, 7);
+      const result = findSeventhArpeggioPositions("A", "minor7", [4, 3], 2, 7);
       if (result !== null) {
         const string4Notes = result.filter((p) => p.stringNum === 4);
         expect(string4Notes.length).toBeGreaterThanOrEqual(2);
@@ -605,7 +605,7 @@ describe("Seventh Chord Arpeggios", () => {
         { root: "F#/Gb", type: "m7b5" },
       ];
       for (const { root, type } of cases) {
-        const result = findSeventhArpeggioPositions(root, type, [5, 4, 3], 3, 8);
+        const result = findSeventhArpeggioPositions(root, type, [5, 4], 3, 8);
         if (result !== null) {
           const degrees = new Set(result.map((p) => p.degree));
           expect(degrees).toEqual(new Set([1, 3, 5, 7]));
@@ -616,17 +616,18 @@ describe("Seventh Chord Arpeggios", () => {
 
   describe("generateSeventhArpeggioRound", () => {
     const VALID_STRING_GROUPS = [
-      [6, 5, 4],
-      [5, 4, 3],
-      [4, 3, 2],
-      [3, 2, 1],
+      [6, 5],
+      [5, 4],
+      [4, 3],
+      [3, 2],
+      [2, 1],
     ];
 
     test("should return a valid round with all required fields", () => {
       const round = generateSeventhArpeggioRound(5);
       expect(round.rootNote).toBeDefined();
       expect(["dominant7", "minor7", "major7", "m7b5"]).toContain(round.arpeggioType);
-      expect(round.strings).toHaveLength(3);
+      expect(round.strings).toHaveLength(2);
       expect(round.startFret).toBeGreaterThanOrEqual(1);
       expect(round.positions.length).toBeGreaterThan(0);
     });
