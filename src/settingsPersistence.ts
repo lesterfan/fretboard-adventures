@@ -1,16 +1,20 @@
 import { ALL_MODES, ModeName } from "./library/Library";
+import { ALL_QUESTION_TYPES, QuestionTypeId } from "./questionRegistry";
 
 const STORAGE_KEY = "globalSettings";
 
 export interface GlobalSettingsState {
   enabledModes: ModeName[];
+  enabledQuestionTypes: QuestionTypeId[];
 }
 
 export const DEFAULTS: GlobalSettingsState = {
   enabledModes: ["ionian", "dorian", "aeolian"],
+  enabledQuestionTypes: [...ALL_QUESTION_TYPES],
 };
 
 const validModeSet = new Set<string>(ALL_MODES);
+const validQuestionTypeSet = new Set<string>(ALL_QUESTION_TYPES);
 
 export function parseSettings(raw: string | null): GlobalSettingsState {
   if (raw === null) return DEFAULTS;
@@ -38,7 +42,17 @@ export function parseSettings(raw: string | null): GlobalSettingsState {
     }
   }
 
-  return { enabledModes };
+  let enabledQuestionTypes = DEFAULTS.enabledQuestionTypes;
+  if (Array.isArray(obj.enabledQuestionTypes)) {
+    const valid = obj.enabledQuestionTypes.filter(
+      (q): q is QuestionTypeId => typeof q === "string" && validQuestionTypeSet.has(q)
+    );
+    if (valid.length > 0) {
+      enabledQuestionTypes = valid;
+    }
+  }
+
+  return { enabledModes, enabledQuestionTypes };
 }
 
 export function loadSettings(): GlobalSettingsState {
@@ -46,5 +60,11 @@ export function loadSettings(): GlobalSettingsState {
 }
 
 export function saveSettings(state: GlobalSettingsState): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify({
+      enabledModes: state.enabledModes,
+      enabledQuestionTypes: state.enabledQuestionTypes,
+    })
+  );
 }

@@ -23,8 +23,9 @@ GitHub Pages.
 React 18 + TypeScript, Vite, MUI 7, react-router-dom, lodash. Tests: Jest + ts-jest (ESM, node env).
 
 `App.tsx` defines routes. Homepage (`/`) renders `AllQuestionsCombined` which randomly picks
-question pages. Invalid routes redirect to `/`. When adding a new page, also add it to
-`AllQuestionPages` in `AllQuestionsCombined.tsx`.
+question pages. Invalid routes redirect to `/`. When adding a new page, add its ID to
+`questionRegistry.ts` and its component to `QUESTION_TYPE_COMPONENTS` in
+`AllQuestionsCombined.tsx`.
 
 Guitar string numbering: string 1 = high E, string 6 = low E. Vite base path:
 `/fretboard-adventures/`.
