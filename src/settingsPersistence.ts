@@ -52,8 +52,15 @@ export function parseSettings(raw: string | null): GlobalSettingsState {
       (q): q is QuestionTypeId => typeof q === "string" && validQuestionTypeSet.has(q)
     );
     if (valid.length > 0) {
-      const storedSet = new Set(valid);
-      const newTypes = ALL_QUESTION_TYPES.filter((q) => !storedSet.has(q));
+      // Determine which types were known when settings were last saved.
+      // Types not in the known set are newly added and should default to enabled.
+      const known = Array.isArray(obj.knownQuestionTypes)
+        ? obj.knownQuestionTypes.filter(
+            (q): q is string => typeof q === "string" && validQuestionTypeSet.has(q)
+          )
+        : valid;
+      const knownSet = new Set(known);
+      const newTypes = ALL_QUESTION_TYPES.filter((q) => !knownSet.has(q));
       enabledQuestionTypes = [...valid, ...newTypes];
     }
   }
@@ -96,6 +103,7 @@ export function saveSettings(state: GlobalSettingsState): void {
     JSON.stringify({
       enabledModes: state.enabledModes,
       enabledQuestionTypes: state.enabledQuestionTypes,
+      knownQuestionTypes: ALL_QUESTION_TYPES,
       enabledIntervalReferenceDegrees: state.enabledIntervalReferenceDegrees,
       enabledIntervalTargetDegrees: state.enabledIntervalTargetDegrees,
     })

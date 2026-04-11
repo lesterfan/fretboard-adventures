@@ -61,22 +61,26 @@ describe("parseSettings", () => {
     });
   });
 
-  test("returns valid enabledQuestionTypes with new types appended", () => {
-    const stored = ["fretboard_recognition", "triad_inversions"];
-    const raw = JSON.stringify({ enabledQuestionTypes: stored });
-    const result = parseSettings(raw);
-    const newTypes = ALL_QUESTION_TYPES.filter((q) => !stored.includes(q));
-    expect(result.enabledQuestionTypes).toEqual([...stored, ...newTypes]);
+  test("preserves enabled question types and does not re-enable disabled ones", () => {
+    const raw = JSON.stringify({
+      enabledQuestionTypes: ["fretboard_recognition", "triad_inversions"],
+      knownQuestionTypes: ALL_QUESTION_TYPES,
+    });
+    expect(parseSettings(raw)).toEqual({
+      ...DEFAULTS,
+      enabledQuestionTypes: ["fretboard_recognition", "triad_inversions"],
+    });
   });
 
-  test("filters out invalid question type names, keeps valid ones plus new types", () => {
+  test("filters out invalid question type names, keeps valid ones", () => {
     const raw = JSON.stringify({
       enabledQuestionTypes: ["fretboard_recognition", "bogus", "triad_inversions"],
+      knownQuestionTypes: ALL_QUESTION_TYPES,
     });
-    const result = parseSettings(raw);
-    const validStored = ["fretboard_recognition", "triad_inversions"];
-    const newTypes = ALL_QUESTION_TYPES.filter((q) => !validStored.includes(q));
-    expect(result.enabledQuestionTypes).toEqual([...validStored, ...newTypes]);
+    expect(parseSettings(raw)).toEqual({
+      ...DEFAULTS,
+      enabledQuestionTypes: ["fretboard_recognition", "triad_inversions"],
+    });
   });
 
   test("falls back to default enabledQuestionTypes when all names are invalid", () => {
@@ -89,32 +93,34 @@ describe("parseSettings", () => {
     expect(parseSettings(raw)).toEqual(DEFAULTS);
   });
 
-  test("appends new question types not present in stored settings", () => {
-    // Simulate stored settings from before "twelve_bar_blues_triads" existed
+  test("auto-enables new question types not in knownQuestionTypes", () => {
+    // Simulate settings saved before "twelve_bar_blues_triads" existed
+    const knownAtSaveTime = ALL_QUESTION_TYPES.filter((q) => q !== "twelve_bar_blues_triads");
     const raw = JSON.stringify({
       enabledQuestionTypes: ["fretboard_recognition", "triad_inversions"],
+      knownQuestionTypes: knownAtSaveTime,
     });
     const result = parseSettings(raw);
-    // The two stored types should still be present and in order
-    expect(result.enabledQuestionTypes[0]).toBe("fretboard_recognition");
-    expect(result.enabledQuestionTypes[1]).toBe("triad_inversions");
-    // New types not in the stored list should be appended
+    // User's enabled choices preserved
+    expect(result.enabledQuestionTypes).toContain("fretboard_recognition");
+    expect(result.enabledQuestionTypes).toContain("triad_inversions");
+    // New type auto-enabled
     expect(result.enabledQuestionTypes).toContain("twelve_bar_blues_triads");
-    expect(result.enabledQuestionTypes).toContain("note_on_a_string");
-    expect(result.enabledQuestionTypes).toContain("seventh_chord_inversions");
+    // Types that were known but disabled stay disabled
+    expect(result.enabledQuestionTypes).not.toContain("note_on_a_string");
+    expect(result.enabledQuestionTypes).not.toContain("seventh_chord_inversions");
   });
 
   test("parses both enabledModes and enabledQuestionTypes together", () => {
-    const stored = ["note_on_a_string", "seventh_chord_arpeggios"];
     const raw = JSON.stringify({
       enabledModes: ["lydian"],
-      enabledQuestionTypes: stored,
+      enabledQuestionTypes: ["note_on_a_string", "seventh_chord_arpeggios"],
+      knownQuestionTypes: ALL_QUESTION_TYPES,
     });
-    const newTypes = ALL_QUESTION_TYPES.filter((q) => !stored.includes(q));
     expect(parseSettings(raw)).toEqual({
       ...DEFAULTS,
       enabledModes: ["lydian"],
-      enabledQuestionTypes: [...stored, ...newTypes],
+      enabledQuestionTypes: ["note_on_a_string", "seventh_chord_arpeggios"],
     });
   });
 
