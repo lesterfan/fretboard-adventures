@@ -12,6 +12,7 @@ import MajorPentatonicDegreeIdentification from "./pages/MajorPentatonicDegreeId
 import ModeFromPentatonic from "./pages/ModeFromPentatonic";
 import SeventhChordArpeggios from "./pages/SeventhChordArpeggios";
 import IntervalTraining from "./pages/IntervalTraining";
+import TwelveBarBluesTriads from "./pages/TwelveBarBluesTriads";
 import { Sidebar } from "./components/Sidebar";
 import AllQuestionsCombined from "./pages/AllQuestionsCombined";
 import { GlobalSettingsProvider } from "./GlobalSettingsContext";
@@ -65,6 +66,7 @@ const App: React.FC = () => {
     { path: "/major_pentatonic_degrees", name: "Major Pentatonic Degrees" },
     { path: "/mode_from_pentatonic", name: "Mode from Pentatonic" },
     { path: "/interval_training", name: "Interval Training" },
+    { path: "/twelve_bar_blues_triads", name: "12-Bar Blues Triads" },
   ];
 
   return (
@@ -136,6 +138,10 @@ const App: React.FC = () => {
               <Route
                 path="/interval_training"
                 element={<QuestionPageHost getNextComponent={() => IntervalTraining} />}
+              />
+              <Route
+                path="/twelve_bar_blues_triads"
+                element={<QuestionPageHost getNextComponent={() => TwelveBarBluesTriads} />}
               />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

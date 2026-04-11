@@ -11,6 +11,7 @@ import MajorPentatonicDegreeIdentification from "./MajorPentatonicDegreeIdentifi
 import ModeFromPentatonic from "./ModeFromPentatonic";
 import SeventhChordArpeggios from "./SeventhChordArpeggios";
 import IntervalTraining from "./IntervalTraining";
+import TwelveBarBluesTriads from "./TwelveBarBluesTriads";
 import { ALL_QUESTION_TYPES, QuestionTypeId } from "../questionRegistry";
 import { useGlobalSettings } from "../GlobalSettingsContext";
 import QuestionPageHost from "../components/QuestionPageHost";
@@ -28,6 +29,7 @@ const QUESTION_TYPE_COMPONENTS: Record<QuestionTypeId, React.FC> = {
   mode_from_pentatonic: ModeFromPentatonic,
   seventh_chord_arpeggios: SeventhChordArpeggios,
   interval_training: IntervalTraining,
+  twelve_bar_blues_triads: TwelveBarBluesTriads,
 };
 
 const AllQuestionsCombined: React.FC = () => {

@@ -132,7 +132,7 @@ export function findTriadPositions(
   return positions;
 }
 
-const ADJACENT_STRING_GROUPS: [number, number, number][] = [
+export const ADJACENT_STRING_GROUPS: [number, number, number][] = [
   [6, 5, 4],
   [5, 4, 3],
   [4, 3, 2],
@@ -140,7 +140,7 @@ const ADJACENT_STRING_GROUPS: [number, number, number][] = [
 ];
 
 const TRIAD_TYPES: TriadType[] = ["major", "minor", "diminished"];
-const INVERSIONS: Inversion[] = ["root", "first", "second"];
+export const INVERSIONS: Inversion[] = ["root", "first", "second"];
 
 export function generateTriadRound(numFretsToShow: number): TriadRound {
   const maxStartFret = 12 - numFretsToShow + 1;
@@ -847,5 +847,119 @@ export function generateModeFromPentatonicRound(
     pentatonicPositions: pentatonicRound.positions,
     extraPositions,
     startFret: pentatonicRound.startFret,
+  };
+}
+
+// --- 12-Bar Blues Chord Changes ---
+
+export type BluesDegree = "I" | "IV" | "V";
+
+export interface TwelveBarBluesRound {
+  key: string;
+  currentBarNum: number;
+  nextBarNum: number;
+  currentDegree: BluesDegree;
+  targetDegree: BluesDegree;
+  currentChordRoot: string;
+  targetChordRoot: string;
+  referencePositions: TriadPosition[];
+  targetPositions: TriadPosition[];
+  strings: [number, number, number];
+  startFret: number;
+}
+
+const TWELVE_BAR_BLUES: BluesDegree[] = [
+  "I",
+  "I",
+  "I",
+  "I",
+  "IV",
+  "IV",
+  "I",
+  "I",
+  "V",
+  "IV",
+  "I",
+  "V",
+];
+
+// Bar transitions where a chord change occurs (0-indexed pairs)
+const CHORD_CHANGE_BARS: [number, number][] = [
+  [3, 4], // bar 4→5: I→IV
+  [5, 6], // bar 6→7: IV→I
+  [7, 8], // bar 8→9: I→V
+  [8, 9], // bar 9→10: V→IV
+  [9, 10], // bar 10→11: IV→I
+  [10, 11], // bar 11→12: I→V
+];
+
+// Semitones from key root to each blues degree
+const BLUES_DEGREE_SEMITONES: Record<BluesDegree, number> = {
+  I: 0,
+  IV: 5,
+  V: 7,
+};
+
+export function generateTwelveBarBluesRound(numFretsToShow: number): TwelveBarBluesRound {
+  const noteNames = getMusicalNoteNames();
+  const maxStartFret = 12 - numFretsToShow + 1;
+
+  let key: string;
+  let transition: [number, number];
+  let currentDegree: BluesDegree;
+  let targetDegree: BluesDegree;
+  let currentChordRoot: string;
+  let targetChordRoot: string;
+  let strings: [number, number, number];
+  let startFret: number;
+  let referencePositions: TriadPosition[] | null = null;
+  let targetPositions: TriadPosition[] | null = null;
+
+  do {
+    key = getRandomMuscialNoteName();
+    const keyIndex = noteNames.indexOf(key);
+    transition = _.sample(CHORD_CHANGE_BARS) as [number, number];
+    currentDegree = TWELVE_BAR_BLUES[transition[0]];
+    targetDegree = TWELVE_BAR_BLUES[transition[1]];
+    currentChordRoot = noteNames[(keyIndex + BLUES_DEGREE_SEMITONES[currentDegree]) % 12];
+    targetChordRoot = noteNames[(keyIndex + BLUES_DEGREE_SEMITONES[targetDegree]) % 12];
+    strings = _.sample(ADJACENT_STRING_GROUPS) as [number, number, number];
+    startFret = _.random(1, maxStartFret);
+    const endFret = startFret + numFretsToShow - 1;
+
+    const refInversion = _.sample(INVERSIONS) as Inversion;
+    referencePositions = findTriadPositions(
+      currentChordRoot,
+      "major",
+      refInversion,
+      strings,
+      startFret,
+      endFret
+    );
+    if (!referencePositions) continue;
+
+    const targetInversion = _.sample(INVERSIONS) as Inversion;
+    targetPositions = findTriadPositions(
+      targetChordRoot,
+      "major",
+      targetInversion,
+      strings,
+      startFret,
+      endFret
+    );
+  } while (!referencePositions || !targetPositions);
+
+  return {
+    key,
+    currentBarNum: transition[0] + 1,
+    nextBarNum: transition[1] + 1,
+    currentDegree,
+    targetDegree,
+    currentChordRoot,
+    targetChordRoot,
+    referencePositions,
+    targetPositions,
+    strings,
+    startFret,
   };
 }

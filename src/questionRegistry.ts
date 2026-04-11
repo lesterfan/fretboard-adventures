@@ -9,7 +9,8 @@ export type QuestionTypeId =
   | "major_pentatonic_degrees"
   | "mode_from_pentatonic"
   | "seventh_chord_arpeggios"
-  | "interval_training";
+  | "interval_training"
+  | "twelve_bar_blues_triads";
 
 export const ALL_QUESTION_TYPES: QuestionTypeId[] = [
   "fretboard_recognition",
@@ -23,6 +24,7 @@ export const ALL_QUESTION_TYPES: QuestionTypeId[] = [
   "minor_pentatonic_degrees",
   "major_pentatonic_degrees",
   "mode_from_pentatonic",
+  "twelve_bar_blues_triads",
 ];
 
 export const QUESTION_TYPE_DISPLAY_NAMES: Record<QuestionTypeId, string> = {
@@ -37,4 +39,5 @@ export const QUESTION_TYPE_DISPLAY_NAMES: Record<QuestionTypeId, string> = {
   major_pentatonic_degrees: "Major Pentatonic Degrees",
   mode_from_pentatonic: "Mode from Pentatonic",
   interval_training: "Interval Training",
+  twelve_bar_blues_triads: "12-Bar Blues Triads",
 };

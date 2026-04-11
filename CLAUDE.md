@@ -48,6 +48,8 @@ Guitar string numbering: string 1 = high E, string 6 = low E. Vite base path:
   7/major 7/m7b5) on 2 adjacent highlighted strings within a 5-fret window
 - **Interval Training** — given a reference note and its degree in a mode, find a target degree on
   2 adjacent strings; configurable reference/target degree filters in settings
+- **12-Bar Blues Triads** — given a reference major triad (I/IV/V) in a 12-bar blues, find the next
+  chord's triad on the same 3 strings; focuses on chord change transition points
 
 ## Settings persistence
 
