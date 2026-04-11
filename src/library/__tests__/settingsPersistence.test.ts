@@ -1,7 +1,5 @@
 import { DEFAULTS, parseSettings } from "../../settingsPersistence";
 
-const allQuestionTypes = DEFAULTS.enabledQuestionTypes;
-
 describe("parseSettings", () => {
   test("returns defaults when raw is null", () => {
     expect(parseSettings(null)).toEqual(DEFAULTS);
@@ -22,16 +20,16 @@ describe("parseSettings", () => {
   test("returns valid enabledModes as-is", () => {
     const raw = JSON.stringify({ enabledModes: ["lydian", "phrygian"] });
     expect(parseSettings(raw)).toEqual({
+      ...DEFAULTS,
       enabledModes: ["lydian", "phrygian"],
-      enabledQuestionTypes: allQuestionTypes,
     });
   });
 
   test("filters out invalid mode names, keeps valid ones", () => {
     const raw = JSON.stringify({ enabledModes: ["dorian", "bogus", "lydian", "fake"] });
     expect(parseSettings(raw)).toEqual({
+      ...DEFAULTS,
       enabledModes: ["dorian", "lydian"],
-      enabledQuestionTypes: allQuestionTypes,
     });
   });
 
@@ -57,8 +55,8 @@ describe("parseSettings", () => {
       anotherOne: { nested: true },
     });
     expect(parseSettings(raw)).toEqual({
+      ...DEFAULTS,
       enabledModes: ["mixolydian"],
-      enabledQuestionTypes: allQuestionTypes,
     });
   });
 
@@ -67,7 +65,7 @@ describe("parseSettings", () => {
       enabledQuestionTypes: ["fretboard_recognition", "triad_inversions"],
     });
     expect(parseSettings(raw)).toEqual({
-      enabledModes: DEFAULTS.enabledModes,
+      ...DEFAULTS,
       enabledQuestionTypes: ["fretboard_recognition", "triad_inversions"],
     });
   });
@@ -77,7 +75,7 @@ describe("parseSettings", () => {
       enabledQuestionTypes: ["fretboard_recognition", "bogus", "triad_inversions"],
     });
     expect(parseSettings(raw)).toEqual({
-      enabledModes: DEFAULTS.enabledModes,
+      ...DEFAULTS,
       enabledQuestionTypes: ["fretboard_recognition", "triad_inversions"],
     });
   });
@@ -98,8 +96,38 @@ describe("parseSettings", () => {
       enabledQuestionTypes: ["note_on_a_string", "seventh_chord_arpeggios"],
     });
     expect(parseSettings(raw)).toEqual({
+      ...DEFAULTS,
       enabledModes: ["lydian"],
       enabledQuestionTypes: ["note_on_a_string", "seventh_chord_arpeggios"],
     });
+  });
+
+  test("returns valid enabledIntervalReferenceDegrees as-is", () => {
+    const raw = JSON.stringify({ enabledIntervalReferenceDegrees: [1, 3, 5] });
+    expect(parseSettings(raw)).toEqual({
+      ...DEFAULTS,
+      enabledIntervalReferenceDegrees: [1, 3, 5],
+    });
+  });
+
+  test("returns valid enabledIntervalTargetDegrees as-is", () => {
+    const raw = JSON.stringify({ enabledIntervalTargetDegrees: [3, 7] });
+    expect(parseSettings(raw)).toEqual({
+      ...DEFAULTS,
+      enabledIntervalTargetDegrees: [3, 7],
+    });
+  });
+
+  test("filters out invalid degree values", () => {
+    const raw = JSON.stringify({ enabledIntervalReferenceDegrees: [1, 0, 8, 3, "bad"] });
+    expect(parseSettings(raw)).toEqual({
+      ...DEFAULTS,
+      enabledIntervalReferenceDegrees: [1, 3],
+    });
+  });
+
+  test("falls back to default degrees when all values are invalid", () => {
+    const raw = JSON.stringify({ enabledIntervalTargetDegrees: [0, 8, 99] });
+    expect(parseSettings(raw)).toEqual(DEFAULTS);
   });
 });

@@ -15,6 +15,7 @@ import {
   getSeventhArpeggioNotes,
   findSeventhArpeggioPositions,
   generateSeventhArpeggioRound,
+  generateIntervalTrainingRound,
   SeventhChordInversion,
 } from "../Library";
 
@@ -673,6 +674,97 @@ describe("Seventh Chord Arpeggios", () => {
         for (const pos of round.positions) {
           expect(round.strings).toContain(pos.stringNum);
         }
+      }
+    });
+  });
+});
+
+describe("Interval Training", () => {
+  describe("generateIntervalTrainingRound", () => {
+    const VALID_STRING_PAIRS = [
+      [6, 5],
+      [5, 4],
+      [4, 3],
+      [3, 2],
+      [2, 1],
+    ];
+
+    test("returns a valid round with all required fields", () => {
+      const round = generateIntervalTrainingRound(5);
+      expect(round.rootNote).toBeDefined();
+      expect(round.modeName).toBeDefined();
+      expect(round.referenceDegree).toBeGreaterThanOrEqual(1);
+      expect(round.referenceDegree).toBeLessThanOrEqual(7);
+      expect(round.targetDegree).toBeGreaterThanOrEqual(1);
+      expect(round.targetDegree).toBeLessThanOrEqual(7);
+      expect(round.referenceDegree).not.toBe(round.targetDegree);
+      expect(round.referencePositions.length).toBeGreaterThan(0);
+      expect(round.targetPositions.length).toBeGreaterThan(0);
+      expect(round.strings).toHaveLength(2);
+      expect(round.startFret).toBeGreaterThanOrEqual(1);
+    });
+
+    test("reference and target degrees differ", () => {
+      for (let i = 0; i < 20; i++) {
+        const round = generateIntervalTrainingRound(5);
+        expect(round.referenceDegree).not.toBe(round.targetDegree);
+      }
+    });
+
+    test("all positions fall within the fret window", () => {
+      for (let i = 0; i < 20; i++) {
+        const round = generateIntervalTrainingRound(5);
+        const endFret = round.startFret + 4;
+        for (const pos of [...round.referencePositions, ...round.targetPositions]) {
+          expect(pos.fretNum).toBeGreaterThanOrEqual(round.startFret);
+          expect(pos.fretNum).toBeLessThanOrEqual(endFret);
+        }
+      }
+    });
+
+    test("positions are only on the selected strings", () => {
+      for (let i = 0; i < 20; i++) {
+        const round = generateIntervalTrainingRound(5);
+        for (const pos of [...round.referencePositions, ...round.targetPositions]) {
+          expect(round.strings).toContain(pos.stringNum);
+        }
+      }
+    });
+
+    test("strings are one of the valid adjacent pairs", () => {
+      for (let i = 0; i < 20; i++) {
+        const round = generateIntervalTrainingRound(5);
+        expect(VALID_STRING_PAIRS).toContainEqual([...round.strings]);
+      }
+    });
+
+    test("note names at each position match getGuitarNoteName", () => {
+      for (let i = 0; i < 20; i++) {
+        const round = generateIntervalTrainingRound(5);
+        for (const pos of [...round.referencePositions, ...round.targetPositions]) {
+          expect(getGuitarNoteName(pos.stringNum, pos.fretNum)).toBe(pos.noteName);
+        }
+      }
+    });
+
+    test("respects enabledModes filter", () => {
+      for (let i = 0; i < 20; i++) {
+        const round = generateIntervalTrainingRound(5, ["ionian", "dorian"]);
+        expect(["ionian", "dorian"]).toContain(round.modeName);
+      }
+    });
+
+    test("respects enabledRefDegrees filter", () => {
+      for (let i = 0; i < 20; i++) {
+        const round = generateIntervalTrainingRound(5, undefined, [1, 5]);
+        expect([1, 5]).toContain(round.referenceDegree);
+      }
+    });
+
+    test("respects enabledTargetDegrees filter", () => {
+      for (let i = 0; i < 20; i++) {
+        const round = generateIntervalTrainingRound(5, undefined, undefined, [3, 7]);
+        expect([3, 7]).toContain(round.targetDegree);
       }
     });
   });

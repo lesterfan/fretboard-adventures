@@ -8,6 +8,10 @@ interface GlobalSettingsContextValue {
   setEnabledModes: React.Dispatch<React.SetStateAction<ModeName[]>>;
   enabledQuestionTypes: QuestionTypeId[];
   setEnabledQuestionTypes: React.Dispatch<React.SetStateAction<QuestionTypeId[]>>;
+  enabledIntervalReferenceDegrees: number[];
+  setEnabledReferenceDegrees: React.Dispatch<React.SetStateAction<number[]>>;
+  enabledIntervalTargetDegrees: number[];
+  setEnabledTargetDegrees: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
 const GlobalSettingsContext = createContext<GlobalSettingsContextValue>({
@@ -15,6 +19,10 @@ const GlobalSettingsContext = createContext<GlobalSettingsContextValue>({
   setEnabledModes: () => {},
   enabledQuestionTypes: DEFAULTS.enabledQuestionTypes,
   setEnabledQuestionTypes: () => {},
+  enabledIntervalReferenceDegrees: DEFAULTS.enabledIntervalReferenceDegrees,
+  setEnabledReferenceDegrees: () => {},
+  enabledIntervalTargetDegrees: DEFAULTS.enabledIntervalTargetDegrees,
+  setEnabledTargetDegrees: () => {},
 });
 
 export const GlobalSettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -22,14 +30,39 @@ export const GlobalSettingsProvider: React.FC<{ children: React.ReactNode }> = (
   const [enabledQuestionTypes, setEnabledQuestionTypes] = useState<QuestionTypeId[]>(
     () => loadSettings().enabledQuestionTypes
   );
+  const [enabledIntervalReferenceDegrees, setEnabledReferenceDegrees] = useState<number[]>(
+    () => loadSettings().enabledIntervalReferenceDegrees
+  );
+  const [enabledIntervalTargetDegrees, setEnabledTargetDegrees] = useState<number[]>(
+    () => loadSettings().enabledIntervalTargetDegrees
+  );
 
   useEffect(() => {
-    saveSettings({ enabledModes, enabledQuestionTypes });
-  }, [enabledModes, enabledQuestionTypes]);
+    saveSettings({
+      enabledModes,
+      enabledQuestionTypes,
+      enabledIntervalReferenceDegrees,
+      enabledIntervalTargetDegrees,
+    });
+  }, [
+    enabledModes,
+    enabledQuestionTypes,
+    enabledIntervalReferenceDegrees,
+    enabledIntervalTargetDegrees,
+  ]);
 
   return (
     <GlobalSettingsContext.Provider
-      value={{ enabledModes, setEnabledModes, enabledQuestionTypes, setEnabledQuestionTypes }}
+      value={{
+        enabledModes,
+        setEnabledModes,
+        enabledQuestionTypes,
+        setEnabledQuestionTypes,
+        enabledIntervalReferenceDegrees,
+        setEnabledReferenceDegrees,
+        enabledIntervalTargetDegrees,
+        setEnabledTargetDegrees,
+      }}
     >
       {children}
     </GlobalSettingsContext.Provider>

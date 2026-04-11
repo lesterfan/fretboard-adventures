@@ -687,6 +687,134 @@ export function generateSeventhArpeggioRound(numFretsToShow: number): SeventhArp
   return { rootNote, arpeggioType, strings, startFret, positions };
 }
 
+// --- Interval Training Logic ---
+
+export interface IntervalPosition {
+  stringNum: number;
+  fretNum: number;
+  degree: number; // 1-7
+  noteName: string;
+}
+
+export interface IntervalTrainingRound {
+  rootNote: string;
+  modeName: ModeName;
+  referenceDegree: number; // 1-7
+  targetDegree: number; // 1-7, different from reference
+  referencePositions: IntervalPosition[];
+  targetPositions: IntervalPosition[];
+  strings: [number, number];
+  startFret: number;
+}
+
+const MODE_SEMITONES: Record<ModeName, number[]> = {
+  ionian: [0, 2, 4, 5, 7, 9, 11],
+  dorian: [0, 2, 3, 5, 7, 9, 10],
+  phrygian: [0, 1, 3, 5, 7, 8, 10],
+  lydian: [0, 2, 4, 6, 7, 9, 11],
+  mixolydian: [0, 2, 4, 5, 7, 9, 10],
+  aeolian: [0, 2, 3, 5, 7, 8, 10],
+};
+
+export const MODE_DEGREE_LABELS: Record<ModeName, string[]> = {
+  ionian: ["1", "2", "3", "4", "5", "6", "7"],
+  dorian: ["1", "2", "b3", "4", "5", "6", "b7"],
+  phrygian: ["1", "b2", "b3", "4", "5", "b6", "b7"],
+  lydian: ["1", "2", "3", "#4", "5", "6", "7"],
+  mixolydian: ["1", "2", "3", "4", "5", "6", "b7"],
+  aeolian: ["1", "2", "b3", "4", "5", "b6", "b7"],
+};
+
+export const ALL_DEGREES = [1, 2, 3, 4, 5, 6, 7];
+
+function findModeDegreePositions(
+  rootNote: string,
+  modeName: ModeName,
+  degree: number,
+  strings: number[],
+  startFret: number,
+  endFret: number
+): IntervalPosition[] {
+  const noteNames = getMusicalNoteNames();
+  const rootIndex = noteNames.indexOf(rootNote);
+  if (rootIndex === -1) {
+    throw new Error(`Invalid root note: ${rootNote}`);
+  }
+  const semitone = MODE_SEMITONES[modeName][degree - 1];
+  const targetNote = noteNames[(rootIndex + semitone) % 12];
+
+  const positions: IntervalPosition[] = [];
+  for (const stringNum of strings) {
+    for (let fretNum = startFret; fretNum <= endFret; fretNum++) {
+      if (getGuitarNoteName(stringNum, fretNum) === targetNote) {
+        positions.push({ stringNum, fretNum, degree, noteName: targetNote });
+      }
+    }
+  }
+  return positions;
+}
+
+export function generateIntervalTrainingRound(
+  numFretsToShow: number,
+  enabledModes: ModeName[] = ALL_MODES,
+  enabledRefDegrees: number[] = ALL_DEGREES,
+  enabledTargetDegrees: number[] = ALL_DEGREES
+): IntervalTrainingRound {
+  if (enabledModes.length === 0) {
+    throw new Error("At least one mode must be enabled");
+  }
+  if (enabledRefDegrees.length === 0 || enabledTargetDegrees.length === 0) {
+    throw new Error("At least one degree must be enabled for both reference and target");
+  }
+
+  const maxStartFret = 12 - numFretsToShow + 1;
+  let rootNote: string;
+  let modeName: ModeName;
+  let referenceDegree!: number;
+  let targetDegree!: number;
+  let strings: [number, number];
+  let startFret: number;
+  let referencePositions!: IntervalPosition[];
+  let targetPositions!: IntervalPosition[];
+  do {
+    rootNote = getRandomMuscialNoteName();
+    modeName = _.sample(enabledModes) as ModeName;
+    strings = _.sample(ADJACENT_STRING_PAIRS) as [number, number];
+    startFret = _.random(1, maxStartFret);
+    referenceDegree = _.sample(enabledRefDegrees) as number;
+    const availableTargets = enabledTargetDegrees.filter((d) => d !== referenceDegree);
+    if (availableTargets.length === 0) continue;
+    targetDegree = _.sample(availableTargets) as number;
+    const endFret = startFret + numFretsToShow - 1;
+    referencePositions = findModeDegreePositions(
+      rootNote,
+      modeName,
+      referenceDegree,
+      [...strings],
+      startFret,
+      endFret
+    );
+    targetPositions = findModeDegreePositions(
+      rootNote,
+      modeName,
+      targetDegree,
+      [...strings],
+      startFret,
+      endFret
+    );
+  } while (referencePositions.length === 0 || targetPositions.length === 0);
+  return {
+    rootNote,
+    modeName,
+    referenceDegree,
+    targetDegree,
+    referencePositions,
+    targetPositions,
+    strings,
+    startFret,
+  };
+}
+
 export function generateModeFromPentatonicRound(
   numFretsToShow: number,
   enabledModes: ModeName[] = ALL_MODES

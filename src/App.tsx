@@ -11,6 +11,7 @@ import MinorPentatonicDegreeIdentification from "./pages/MinorPentatonicDegreeId
 import MajorPentatonicDegreeIdentification from "./pages/MajorPentatonicDegreeIdentification";
 import ModeFromPentatonic from "./pages/ModeFromPentatonic";
 import SeventhChordArpeggios from "./pages/SeventhChordArpeggios";
+import IntervalTraining from "./pages/IntervalTraining";
 import { Sidebar } from "./components/Sidebar";
 import AllQuestionsCombined from "./pages/AllQuestionsCombined";
 import { GlobalSettingsProvider } from "./GlobalSettingsContext";
@@ -63,6 +64,7 @@ const App: React.FC = () => {
     { path: "/minor_pentatonic_degrees", name: "Minor Pentatonic Degrees" },
     { path: "/major_pentatonic_degrees", name: "Major Pentatonic Degrees" },
     { path: "/mode_from_pentatonic", name: "Mode from Pentatonic" },
+    { path: "/interval_training", name: "Interval Training" },
   ];
 
   return (
@@ -130,6 +132,10 @@ const App: React.FC = () => {
               <Route
                 path="/seventh_chord_arpeggios"
                 element={<QuestionPageHost getNextComponent={() => SeventhChordArpeggios} />}
+              />
+              <Route
+                path="/interval_training"
+                element={<QuestionPageHost getNextComponent={() => IntervalTraining} />}
               />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

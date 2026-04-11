@@ -8,7 +8,8 @@ export type QuestionTypeId =
   | "minor_pentatonic_degrees"
   | "major_pentatonic_degrees"
   | "mode_from_pentatonic"
-  | "seventh_chord_arpeggios";
+  | "seventh_chord_arpeggios"
+  | "interval_training";
 
 export const ALL_QUESTION_TYPES: QuestionTypeId[] = [
   "fretboard_recognition",
@@ -16,6 +17,7 @@ export const ALL_QUESTION_TYPES: QuestionTypeId[] = [
   "triad_inversions",
   "seventh_chord_inversions",
   "seventh_chord_arpeggios",
+  "interval_training",
   "minor_pentatonic",
   "major_pentatonic",
   "minor_pentatonic_degrees",
@@ -34,4 +36,5 @@ export const QUESTION_TYPE_DISPLAY_NAMES: Record<QuestionTypeId, string> = {
   minor_pentatonic_degrees: "Minor Pentatonic Degrees",
   major_pentatonic_degrees: "Major Pentatonic Degrees",
   mode_from_pentatonic: "Mode from Pentatonic",
+  interval_training: "Interval Training",
 };

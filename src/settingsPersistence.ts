@@ -1,4 +1,4 @@
-import { ALL_MODES, ModeName } from "./library/Library";
+import { ALL_DEGREES, ALL_MODES, ModeName } from "./library/Library";
 import { ALL_QUESTION_TYPES, QuestionTypeId } from "./questionRegistry";
 
 const STORAGE_KEY = "globalSettings";
@@ -6,11 +6,15 @@ const STORAGE_KEY = "globalSettings";
 export interface GlobalSettingsState {
   enabledModes: ModeName[];
   enabledQuestionTypes: QuestionTypeId[];
+  enabledIntervalReferenceDegrees: number[];
+  enabledIntervalTargetDegrees: number[];
 }
 
 export const DEFAULTS: GlobalSettingsState = {
   enabledModes: ["ionian", "dorian", "aeolian"],
   enabledQuestionTypes: [...ALL_QUESTION_TYPES],
+  enabledIntervalReferenceDegrees: [1],
+  enabledIntervalTargetDegrees: [...ALL_DEGREES],
 };
 
 const validModeSet = new Set<string>(ALL_MODES);
@@ -52,7 +56,32 @@ export function parseSettings(raw: string | null): GlobalSettingsState {
     }
   }
 
-  return { enabledModes, enabledQuestionTypes };
+  let enabledIntervalReferenceDegrees = DEFAULTS.enabledIntervalReferenceDegrees;
+  if (Array.isArray(obj.enabledIntervalReferenceDegrees)) {
+    const valid = obj.enabledIntervalReferenceDegrees.filter(
+      (d): d is number => typeof d === "number" && ALL_DEGREES.includes(d)
+    );
+    if (valid.length > 0) {
+      enabledIntervalReferenceDegrees = valid;
+    }
+  }
+
+  let enabledIntervalTargetDegrees = DEFAULTS.enabledIntervalTargetDegrees;
+  if (Array.isArray(obj.enabledIntervalTargetDegrees)) {
+    const valid = obj.enabledIntervalTargetDegrees.filter(
+      (d): d is number => typeof d === "number" && ALL_DEGREES.includes(d)
+    );
+    if (valid.length > 0) {
+      enabledIntervalTargetDegrees = valid;
+    }
+  }
+
+  return {
+    enabledModes,
+    enabledQuestionTypes,
+    enabledIntervalReferenceDegrees,
+    enabledIntervalTargetDegrees,
+  };
 }
 
 export function loadSettings(): GlobalSettingsState {
@@ -65,6 +94,8 @@ export function saveSettings(state: GlobalSettingsState): void {
     JSON.stringify({
       enabledModes: state.enabledModes,
       enabledQuestionTypes: state.enabledQuestionTypes,
+      enabledIntervalReferenceDegrees: state.enabledIntervalReferenceDegrees,
+      enabledIntervalTargetDegrees: state.enabledIntervalTargetDegrees,
     })
   );
 }

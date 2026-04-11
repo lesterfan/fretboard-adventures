@@ -10,6 +10,7 @@ import MinorPentatonicDegreeIdentification from "./MinorPentatonicDegreeIdentifi
 import MajorPentatonicDegreeIdentification from "./MajorPentatonicDegreeIdentification";
 import ModeFromPentatonic from "./ModeFromPentatonic";
 import SeventhChordArpeggios from "./SeventhChordArpeggios";
+import IntervalTraining from "./IntervalTraining";
 import { ALL_QUESTION_TYPES, QuestionTypeId } from "../questionRegistry";
 import { useGlobalSettings } from "../GlobalSettingsContext";
 import QuestionPageHost from "../components/QuestionPageHost";
@@ -26,6 +27,7 @@ const QUESTION_TYPE_COMPONENTS: Record<QuestionTypeId, React.FC> = {
   major_pentatonic_degrees: MajorPentatonicDegreeIdentification,
   mode_from_pentatonic: ModeFromPentatonic,
   seventh_chord_arpeggios: SeventhChordArpeggios,
+  interval_training: IntervalTraining,
 };
 
 const AllQuestionsCombined: React.FC = () => {

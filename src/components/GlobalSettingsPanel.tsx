@@ -10,7 +10,7 @@ import {
   SelectChangeEvent,
   Stack,
 } from "@mui/material";
-import { ALL_MODES, MODE_DISPLAY_NAMES, ModeName } from "../library/Library";
+import { ALL_DEGREES, ALL_MODES, MODE_DISPLAY_NAMES, ModeName } from "../library/Library";
 import {
   ALL_QUESTION_TYPES,
   QUESTION_TYPE_DISPLAY_NAMES,
@@ -20,8 +20,16 @@ import { useGlobalSettings } from "../GlobalSettingsContext";
 import { useLocation } from "react-router-dom";
 
 const GlobalSettingsPanel: React.FC = () => {
-  const { enabledModes, setEnabledModes, enabledQuestionTypes, setEnabledQuestionTypes } =
-    useGlobalSettings();
+  const {
+    enabledModes,
+    setEnabledModes,
+    enabledQuestionTypes,
+    setEnabledQuestionTypes,
+    enabledIntervalReferenceDegrees,
+    setEnabledReferenceDegrees,
+    enabledIntervalTargetDegrees,
+    setEnabledTargetDegrees,
+  } = useGlobalSettings();
   const location = useLocation();
   const isCombinedPage = location.pathname === "/";
 
@@ -35,6 +43,18 @@ const GlobalSettingsPanel: React.FC = () => {
     const value = event.target.value as QuestionTypeId[];
     if (value.length === 0) return;
     setEnabledQuestionTypes(value);
+  };
+
+  const handleRefDegreeChange = (event: SelectChangeEvent<number[]>) => {
+    const value = event.target.value as number[];
+    if (value.length === 0) return;
+    setEnabledReferenceDegrees(value);
+  };
+
+  const handleTargetDegreeChange = (event: SelectChangeEvent<number[]>) => {
+    const value = event.target.value as number[];
+    if (value.length === 0) return;
+    setEnabledTargetDegrees(value);
   };
 
   return (
@@ -75,6 +95,42 @@ const GlobalSettingsPanel: React.FC = () => {
             <MenuItem key={mode} value={mode}>
               <Checkbox checked={enabledModes.includes(mode)} />
               <ListItemText primary={MODE_DISPLAY_NAMES[mode]} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <FormControl sx={{ width: 365, maxWidth: "100%" }} size="small">
+        <InputLabel id="ref-degree-select-label">Interval Reference Degrees</InputLabel>
+        <Select
+          labelId="ref-degree-select-label"
+          multiple
+          value={enabledIntervalReferenceDegrees}
+          onChange={handleRefDegreeChange}
+          input={<OutlinedInput label="Interval Reference Degrees" />}
+          renderValue={(selected) => selected.sort().join(", ")}
+        >
+          {ALL_DEGREES.map((d) => (
+            <MenuItem key={d} value={d}>
+              <Checkbox checked={enabledIntervalReferenceDegrees.includes(d)} />
+              <ListItemText primary={String(d)} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <FormControl sx={{ width: 365, maxWidth: "100%" }} size="small">
+        <InputLabel id="target-degree-select-label">Interval Target Degrees</InputLabel>
+        <Select
+          labelId="target-degree-select-label"
+          multiple
+          value={enabledIntervalTargetDegrees}
+          onChange={handleTargetDegreeChange}
+          input={<OutlinedInput label="Interval Target Degrees" />}
+          renderValue={(selected) => selected.sort().join(", ")}
+        >
+          {ALL_DEGREES.map((d) => (
+            <MenuItem key={d} value={d}>
+              <Checkbox checked={enabledIntervalTargetDegrees.includes(d)} />
+              <ListItemText primary={String(d)} />
             </MenuItem>
           ))}
         </Select>

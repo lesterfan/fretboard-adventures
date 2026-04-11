@@ -46,6 +46,8 @@ Guitar string numbering: string 1 = high E, string 6 = low E. Vite base path:
   selector defaults to Ionian, Dorian, Aeolian
 - **Seventh Chord Arpeggios** — find all notes of a seventh chord arpeggio (dominant 7/minor
   7/major 7/m7b5) on 2 adjacent highlighted strings within a 5-fret window
+- **Interval Training** — given a reference note and its degree in a mode, find a target degree on
+  2 adjacent strings; configurable reference/target degree filters in settings
 
 ## Settings persistence
 
