@@ -1,0 +1,47 @@
+import React, { useState } from "react";
+import { Typography } from "@mui/material";
+import {
+  generatePentatonicRound,
+  PentatonicRound,
+  PENTATONIC_DEGREE_LABELS,
+  DEGREE_COLORS,
+} from "../library/Library";
+import AnswerButtonList from "../components/AnswerButtonList";
+import FretboardDiagram, { FretboardMarker } from "../components/FretboardDiagram";
+
+const NUM_FRETS_TO_SHOW = 5;
+
+const MajorPentatonicScalePositions: React.FC = () => {
+  const [round] = useState<PentatonicRound>(() =>
+    generatePentatonicRound(NUM_FRETS_TO_SHOW, "major")
+  );
+  const [showAnswer, setShowAnswer] = useState(false);
+
+  const { rootNote, pentatonicType, positions, startFret } = round;
+
+  const markers: FretboardMarker[] = positions.map((p) => ({
+    stringNum: p.stringNum,
+    fretNum: p.fretNum,
+    label: PENTATONIC_DEGREE_LABELS[pentatonicType][p.degree],
+    color: DEGREE_COLORS[p.degree],
+  }));
+
+  return (
+    <>
+      <Typography variant="body1" gutterBottom>
+        <b>
+          Find the <span style={{ color: "#1976d2" }}>{rootNote} major</span> pentatonic scale here
+        </b>
+      </Typography>
+      <FretboardDiagram
+        markers={showAnswer ? markers : []}
+        startFret={startFret}
+        numFretsToShow={NUM_FRETS_TO_SHOW}
+        highlightedStrings={[]}
+      />
+      <AnswerButtonList showingAnswer={showAnswer} onShowAnswer={() => setShowAnswer(true)} />
+    </>
+  );
+};
+
+export default MajorPentatonicScalePositions;

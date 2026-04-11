@@ -4,8 +4,10 @@ import FretboardRecognition from "./FretboardRecognition";
 import NoteOnAString from "./NoteOnAString";
 import TriadInversions from "./TriadInversions";
 import SeventhChordInversions from "./SeventhChordInversions";
-import PentatonicScalePositions from "./PentatonicScalePositions";
-import PentatonicDegreeIdentification from "./PentatonicDegreeIdentification";
+import MinorPentatonicScalePositions from "./MinorPentatonicScalePositions";
+import MajorPentatonicScalePositions from "./MajorPentatonicScalePositions";
+import MinorPentatonicDegreeIdentification from "./MinorPentatonicDegreeIdentification";
+import MajorPentatonicDegreeIdentification from "./MajorPentatonicDegreeIdentification";
 import ModeFromPentatonic from "./ModeFromPentatonic";
 import SeventhChordArpeggios from "./SeventhChordArpeggios";
 import QuestionPageHost from "../components/QuestionPageHost";
@@ -16,8 +18,10 @@ const AllQuestionPages = [
   NoteOnAString,
   TriadInversions,
   SeventhChordInversions,
-  PentatonicScalePositions,
-  PentatonicDegreeIdentification,
+  MinorPentatonicScalePositions,
+  MajorPentatonicScalePositions,
+  MinorPentatonicDegreeIdentification,
+  MajorPentatonicDegreeIdentification,
   ModeFromPentatonic,
   SeventhChordArpeggios,
 ];

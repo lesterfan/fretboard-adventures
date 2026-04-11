@@ -5,8 +5,10 @@ import FretboardRecognition from "./pages/FretboardRecognition";
 import NoteOnAString from "./pages/NoteOnAString";
 import TriadInversions from "./pages/TriadInversions";
 import SeventhChordInversions from "./pages/SeventhChordInversions";
-import PentatonicScalePositions from "./pages/PentatonicScalePositions";
-import PentatonicDegreeIdentification from "./pages/PentatonicDegreeIdentification";
+import MinorPentatonicScalePositions from "./pages/MinorPentatonicScalePositions";
+import MajorPentatonicScalePositions from "./pages/MajorPentatonicScalePositions";
+import MinorPentatonicDegreeIdentification from "./pages/MinorPentatonicDegreeIdentification";
+import MajorPentatonicDegreeIdentification from "./pages/MajorPentatonicDegreeIdentification";
 import ModeFromPentatonic from "./pages/ModeFromPentatonic";
 import SeventhChordArpeggios from "./pages/SeventhChordArpeggios";
 import { Sidebar } from "./components/Sidebar";
@@ -56,8 +58,10 @@ const App: React.FC = () => {
     { path: "/triad_inversions", name: "Triad Inversions" },
     { path: "/seventh_chord_inversions", name: "Seventh Chord Inversions" },
     { path: "/seventh_chord_arpeggios", name: "Seventh Chord Arpeggios" },
-    { path: "/pentatonic", name: "Pentatonic Scale Positions" },
-    { path: "/pentatonic_degrees", name: "Pentatonic Degrees" },
+    { path: "/minor_pentatonic", name: "Minor Pentatonic Positions" },
+    { path: "/major_pentatonic", name: "Major Pentatonic Positions" },
+    { path: "/minor_pentatonic_degrees", name: "Minor Pentatonic Degrees" },
+    { path: "/major_pentatonic_degrees", name: "Major Pentatonic Degrees" },
     { path: "/mode_from_pentatonic", name: "Mode from Pentatonic" },
   ];
 
@@ -96,13 +100,27 @@ const App: React.FC = () => {
                 element={<QuestionPageHost getNextComponent={() => SeventhChordInversions} />}
               />
               <Route
-                path="/pentatonic"
-                element={<QuestionPageHost getNextComponent={() => PentatonicScalePositions} />}
+                path="/minor_pentatonic"
+                element={
+                  <QuestionPageHost getNextComponent={() => MinorPentatonicScalePositions} />
+                }
               />
               <Route
-                path="/pentatonic_degrees"
+                path="/major_pentatonic"
                 element={
-                  <QuestionPageHost getNextComponent={() => PentatonicDegreeIdentification} />
+                  <QuestionPageHost getNextComponent={() => MajorPentatonicScalePositions} />
+                }
+              />
+              <Route
+                path="/minor_pentatonic_degrees"
+                element={
+                  <QuestionPageHost getNextComponent={() => MinorPentatonicDegreeIdentification} />
+                }
+              />
+              <Route
+                path="/major_pentatonic_degrees"
+                element={
+                  <QuestionPageHost getNextComponent={() => MajorPentatonicDegreeIdentification} />
                 }
               />
               <Route

@@ -407,7 +407,10 @@ export function findPentatonicBoxPositions(
   return positions;
 }
 
-export function generatePentatonicRound(numFretsToShow: number): PentatonicRound {
+export function generatePentatonicRound(
+  numFretsToShow: number,
+  constrainType?: PentatonicType
+): PentatonicRound {
   const maxStartFret = 12 - numFretsToShow + 1;
   let rootNote: string;
   let pentatonicType: PentatonicType;
@@ -415,7 +418,7 @@ export function generatePentatonicRound(numFretsToShow: number): PentatonicRound
   let positions: PentatonicPosition[] | null;
   do {
     rootNote = getRandomMuscialNoteName();
-    pentatonicType = _.sample(PENTATONIC_TYPES) as PentatonicType;
+    pentatonicType = constrainType ?? (_.sample(PENTATONIC_TYPES) as PentatonicType);
     startFret = _.random(1, maxStartFret);
     positions = findPentatonicBoxPositions(
       rootNote,
